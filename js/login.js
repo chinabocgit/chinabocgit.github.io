@@ -1,6 +1,6 @@
-import { el } from "./dom.js?v=9280a08f";
-import { PICS, PIC_LEN } from "./config.js?v=9280a08f";
-import { login, deviceId, takeLoginMessage, hasSavedSession } from "./session.js?v=9280a08f";
+import { el } from "./dom.js?v=4e265fbc";
+import { PICS, PIC_LEN } from "./config.js?v=4e265fbc";
+import { login, deviceId, takeLoginMessage, hasSavedSession } from "./session.js?v=4e265fbc";
 
 const app = document.getElementById("app");
 const pad2 = n => String(n).padStart(2, "0");
@@ -74,5 +74,7 @@ async function doLogin() {
 }
 
 // Already logged in? Go straight to the map; the map page re-checks the session with the database.
-if (await hasSavedSession()) location.replace("map.html");
+// Arriving here with a message means we were just sent back (logged out): show it and never auto-forward,
+// otherwise login <-> map could bounce forever and hide the reason.
+if (!msg && await hasSavedSession()) location.replace("map.html");
 else render();

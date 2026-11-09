@@ -1,6 +1,7 @@
 // Child session: login, restore, idle timeout, teacher-forced logout detection, logout.
-import { sb, rpc, ApiError, setSessionInvalidHandler } from "./api.js?v=9280a08f";
-import { SB_KEY, LOGIN_FN, TOUCH_EVERY_MS, REVOKE_POLL_MS } from "./config.js?v=9280a08f";
+import { sb, rpc, ApiError, setSessionInvalidHandler } from "./api.js?v=4e265fbc";
+import { el } from "./dom.js?v=4e265fbc";
+import { SB_KEY, LOGIN_FN, TOUCH_EVERY_MS, REVOKE_POLL_MS } from "./config.js?v=4e265fbc";
 
 const MSG_KEY = "lg_login_msg";
 
@@ -62,11 +63,27 @@ export function msLeft() { return expiresAt ? expiresAt - Date.now() : Infinity;
 // Called every second with ms left (for countdown displays).
 export function onTick(fn) { listeners.add(fn); return () => listeners.delete(fn); }
 
+let leaving = false;
 async function localLogout(cls, text) {
+  if (leaving) return;                               // several timers can ask at once; leave only once
+  leaving = true;
   clearInterval(ticking); clearInterval(polling);
   try { await sb.auth.signOut({ scope: "local" }); } catch { /* ignore */ }
+  // signOut() keeps the session when its own network call fails. If the token survived, the login page would
+  // send the child straight back to the map and the two pages would bounce forever, so remove it by hand.
+  for (const k of Object.keys(localStorage)) if (k === "lg-student" || k.startsWith("lg-student-")) localStorage.removeItem(k);
   if (text) setLoginMessage(cls, text);
   goLogin();
+}
+
+// A bad connection must not log the child out: show a retry card instead.
+function showConnectionProblem() {
+  const target = document.getElementById("app") || document.body;
+  target.replaceChildren(el("div", { class: "card empty" },
+    el("p", { class: "msg warn" }, "網路好像不穩，連不上伺服器。你的進度都還在，請再試一次。"),
+    el("div", { class: "row" },
+      el("button", { onclick: () => location.reload() }, "重新試試"),
+      el("button", { class: "ghost", onclick: () => localLogout("ok", "你已登出。") }, "登出"))));
 }
 
 // Every logged-in page calls this first. Resolves with the child profile, or redirects to the login page.
@@ -78,7 +95,7 @@ export async function requireStudent() {
     me = await rpc("rpc_student_me");
   } catch (e) {
     if (e instanceof ApiError && e.code === "session_invalid") return new Promise(() => {});   // handler redirects
-    await localLogout("err", "連線有問題，請重新登入。");
+    showConnectionProblem();                                   // network / server trouble: keep the login
     return new Promise(() => {});
   }
   expiresAt = me.expires_at ? new Date(me.expires_at) : null;
