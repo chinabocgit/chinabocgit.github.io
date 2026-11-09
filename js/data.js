@@ -1,5 +1,5 @@
 // Loads everything the map page needs in one go (curriculum is public read; rewards, theme and assignments are RPCs).
-import { sb, rpc, ApiError } from "./api.js?v=b67c1e52";
+import { sb, rpc, ApiError } from "./api.js?v=cca6bca5";
 
 export async function select(query) {
   const { data, error } = await query;
@@ -38,6 +38,14 @@ export function buildMap(d) {
   for (const a of d.asg.assignments || []) {
     if (a.status === "open" && a.scope_type === "level" && a.level_id) lockedBy.set(a.level_id, a);
   }
+  // A level the teacher assigned shows a pin: to do / in progress while the assignment is open, "done" once handed in.
+  const pinOf = new Map();
+  for (const a of d.asg.assignments || []) {
+    if (a.scope_type !== "level" || !a.level_id) continue;
+    const finished = !!(a.attempt && a.attempt.finished);
+    if (finished) pinOf.set(a.level_id, { state: "done", title: a.title });
+    else if (a.status === "open" && !pinOf.has(a.level_id)) pinOf.set(a.level_id, { state: "todo", title: a.title });
+  }
   const subjects = d.subjects
     .map(s => ({ subject: s, books: d.books.filter(b => b.subject_id === s.id) }))
     .filter(x => x.books.length);
@@ -51,7 +59,7 @@ export function buildMap(d) {
         let state = "new";
         if (r && r.collectible === "gold") state = "gold";
         else if (r && r.collectible) state = "cleared";
-        return { ...l, state, stars: r ? r.best_stars : 0, lock };
+        return { ...l, state, stars: r ? r.best_stars : 0, lock, pin: pinOf.get(l.id) || null };
       });
       return { unit, levels };
     });

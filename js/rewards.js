@@ -1,11 +1,11 @@
 // "My collection": stars, chests, pets and equipment, certificates. Every change goes through a server function;
 // the page only shows what the server says (balance, ownership, results of opening a chest).
-import { el } from "./dom.js?v=b67c1e52";
-import { rpc, ApiError } from "./api.js?v=b67c1e52";
-import { requireStudent } from "./session.js?v=b67c1e52";
-import { applyTheme } from "./theme.js?v=b67c1e52";
-import { petSvg, EQUIP_EMOJI, SLOT_LABEL } from "./pet.js?v=b67c1e52";
-import { isMuted, setMuted, playChestShake, playChestOpen, playFanfare } from "./sound.js?v=b67c1e52";
+import { el } from "./dom.js?v=cca6bca5";
+import { rpc, ApiError } from "./api.js?v=cca6bca5";
+import { requireStudent } from "./session.js?v=cca6bca5";
+import { applyTheme } from "./theme.js?v=cca6bca5";
+import { petSvg, EQUIP_EMOJI, SLOT_LABEL } from "./pet.js?v=cca6bca5";
+import { isMuted, setMuted, playChestShake, playChestOpen, playFanfare } from "./sound.js?v=cca6bca5";
 
 const app = document.getElementById("app");
 const me = await requireStudent();

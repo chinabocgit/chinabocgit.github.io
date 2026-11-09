@@ -1,10 +1,10 @@
 // Map home: subject tabs, units as blocks, levels as lamps, rewards summary, open-assignment banner.
-import { el } from "./dom.js?v=b67c1e52";
-import { ApiError } from "./api.js?v=b67c1e52";
-import { requireStudent, onTick, logout } from "./session.js?v=b67c1e52";
-import { loadMapData, buildMap } from "./data.js?v=b67c1e52";
-import { applyTheme } from "./theme.js?v=b67c1e52";
-import { renderMap } from "./mapview.js?v=b67c1e52";
+import { el } from "./dom.js?v=cca6bca5";
+import { ApiError } from "./api.js?v=cca6bca5";
+import { requireStudent, onTick, logout } from "./session.js?v=cca6bca5";
+import { loadMapData, buildMap } from "./data.js?v=cca6bca5";
+import { applyTheme } from "./theme.js?v=cca6bca5";
+import { renderMap } from "./mapview.js?v=cca6bca5";
 
 const app = document.getElementById("app");
 const me = await requireStudent();
@@ -33,7 +33,7 @@ async function start() {
   }
   state.ui = applyTheme(data.theme);
   state.map = buildMap(data);
-  state.asg = (data.asg.assignments || []).filter(a => a.status === "open");
+  state.asg = data.asg.assignments || [];          // everything the teacher gave, so finished work stays visible
   state.rewards = data.rewards;
   state.chests = data.chests ? data.chests.unopened : 0;
   state.pet = data.pets && data.pets.active_pet_id ? (data.pets.pets.find(p => p.id === data.pets.active_pet_id) || null) : null;
@@ -81,17 +81,31 @@ function subjectTabs() {
       m.subject.name)));
 }
 
+// Teacher assignments. Finished work stays on the map with its score and a link to the details;
+// ended / not-yet-started ones are shown too, so nothing the teacher gave ever just disappears.
 function assignmentBanner() {
-  return el("div", { class: "banner", role: "status" },
-    el("b", null, "📌 老師派的作業（" + state.asg.length + "）"),
-    el("ul", null, state.asg.map(a => {
-      const t = a.attempt && a.attempt.finished ? "（已交，" + (a.attempt.score ?? "—") + " 分）"
-              : a.attempt ? "（做到一半）" : "（還沒做）";
-      const due = a.due_at ? "　截止 " + new Date(a.due_at).toLocaleString("zh-TW", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
-      const done = a.attempt && a.attempt.finished;
-      return el("li", null, a.title + t + due + "　",
-        done ? null : el("a", { class: "btn", href: "play.html?assignment=" + encodeURIComponent(a.id) }, a.attempt ? "繼續" : "開始"));
-    })));
+  const fmt = iso => new Date(iso).toLocaleString("zh-TW", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+  const done = a => !!(a.attempt && a.attempt.finished);
+  const todo = state.asg.filter(a => a.status === "open" && !done(a));
+  const finished = state.asg.filter(done);
+  const other = state.asg.filter(a => !done(a) && a.status !== "open");
+  const row = a => {
+    const isDone = done(a);
+    const state_ = isDone ? "✅ 已完成，" + (a.attempt.score ?? "—") + " 分"
+      : a.status === "upcoming" ? "⏳ 還沒開始（" + fmt(a.start_at) + "）"
+      : a.status === "closed" ? "🔒 已結束，沒有交"
+      : a.attempt ? "✏️ 做到一半（" + a.attempt.answered + "/" + a.total + "）" : "🆕 還沒做";
+    return el("li", { class: "asg-row" },
+      el("div", { class: "asg-main" }, el("b", null, a.title), el("div", { class: "muted" }, state_ + (a.due_at && !isDone && a.status === "open" ? "・截止 " + fmt(a.due_at) : ""))),
+      isDone && a.attempt.id ? el("a", { class: "btn ghost", href: "attempt.html?id=" + encodeURIComponent(a.attempt.id) }, "看詳情")
+        : a.status === "open" ? el("a", { class: "btn", href: "play.html?assignment=" + encodeURIComponent(a.id) }, a.attempt ? "繼續" : "開始") : null);
+  };
+  return el("div", { class: "banner asg-card", role: "status" },
+    el("b", null, "📌 老師派的作業"),
+    todo.length ? [el("div", { class: "muted" }, "還要完成（" + todo.length + "）"), el("ul", { class: "asg-list" }, todo.map(row))]
+                : el("p", { class: "msg ok", style: "margin:6px 0" }, "🎉 目前沒有要完成的作業了！"),
+    finished.length ? [el("div", { class: "muted" }, "已完成（" + finished.length + "）"), el("ul", { class: "asg-list" }, finished.map(row))] : null,
+    other.length ? el("details", null, el("summary", null, "還沒開始或已結束（" + other.length + "）"), el("ul", { class: "asg-list" }, other.map(row))) : null);
 }
 
 function unitBlock({ unit, levels }) {

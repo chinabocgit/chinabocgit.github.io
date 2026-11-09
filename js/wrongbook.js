@@ -1,11 +1,11 @@
 // Wrong-answer notebook: open items first, grouped by level; fixed items on a second tab.
 // An item becomes "fixed" on the server when the child answers it correctly in a practice (see redo.html).
-import { el } from "./dom.js?v=b67c1e52";
-import { sb, rpc, ApiError } from "./api.js?v=b67c1e52";
-import { requireStudent } from "./session.js?v=b67c1e52";
-import { select } from "./data.js?v=b67c1e52";
-import { setSafeHtml } from "./sanitize.js?v=b67c1e52";
-import { describeAnswer, describeResponse } from "./grade.js?v=b67c1e52";
+import { el } from "./dom.js?v=cca6bca5";
+import { sb, rpc, ApiError } from "./api.js?v=cca6bca5";
+import { requireStudent } from "./session.js?v=cca6bca5";
+import { select } from "./data.js?v=cca6bca5";
+import { setSafeHtml } from "./sanitize.js?v=cca6bca5";
+import { describeAnswer, describeResponse } from "./grade.js?v=cca6bca5";
 
 const app = document.getElementById("app");
 const me = await requireStudent();

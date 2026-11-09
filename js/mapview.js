@@ -1,7 +1,7 @@
 // Illustrated learning map (self-drawn SVG, no external images).
 // One scene per subject: units are districts, levels are stops along a winding road, the pet walks next to the current stop.
 // Themes only change palette and decoration; the logic (states, selection, keyboard) is shared.
-import { petSvg } from "./pet.js?v=b67c1e52";
+import { petSvg } from "./pet.js?v=cca6bca5";
 
 const NS = "http://www.w3.org/2000/svg";
 const W = 360;
@@ -92,7 +92,7 @@ function stop(P, l, pos, sel, onSelect, collectibleName) {
   const fill = st === "gold" ? "#ffe08a" : lit ? "#ffb703" : current ? "#ffffff" : P.dim;
   const edge = st === "gold" ? "#e0a800" : lit ? "#e08a00" : current ? "#f08a24" : P.dimEdge;
   const label = l.name + "，" + ({ quiz: "一般關卡", boss: "魔王關", interactive: "互動遊戲", exam: "月考" }[l.kind] || "")
-    + (st === "gold" ? "，金色" + collectibleName : lit ? "，已過關" : "") + (locked ? "，被作業鎖住" : "") + (current ? "，目前關卡" : "");
+    + (st === "gold" ? "，金色" + collectibleName : lit ? "，已過關" : "") + (locked ? "，被作業鎖住" : "") + (l.pin ? (l.pin.state === "done" ? "，老師派的作業，已完成" : "，老師派的作業") : "") + (current ? "，目前關卡" : "");
   const g = s("g", { class: cls.join(" "), transform: `translate(${pos.x} ${pos.y})`, role: "button", tabindex: "0", "aria-label": label, "aria-pressed": String(!!sel) });
   g.append(...[
     lit || current ? s("circle", { class: "halo", r: 34, fill: P.glow, opacity: lit ? ".5" : ".35" }) : null,
@@ -104,6 +104,10 @@ function stop(P, l, pos, sel, onSelect, collectibleName) {
       : locked ? lockIcon() : current ? s("path", { d: "M-5 -8 L9 0 L-5 8 Z", fill: "#f08a24" }) : l.playable ? s("circle", { r: 5, fill: "#fff", opacity: ".8" }) : s("text", { "text-anchor": "middle", y: 6, "font-size": 16 }, "🎮"),
     locked && l.kind === "boss" ? s("g", { transform: "translate(0 4)" }, lockIcon()) : null,
     st === "gold" ? s("text", { class: "sparkle", x: 18, y: -16, "font-size": 15 }, "✨") : null,
+    l.pin ? s("g", { class: "pin " + l.pin.state, transform: "translate(-22 -22)" },
+      s("circle", { r: 11, fill: l.pin.state === "done" ? "#2e9e5b" : "#e8605a", stroke: "#fff", "stroke-width": 2.5 }),
+      l.pin.state === "done" ? s("path", { d: "M-4.5 0 L-1 3.5 L5 -3.5", fill: "none", stroke: "#fff", "stroke-width": 2.6, "stroke-linecap": "round", "stroke-linejoin": "round" })
+                             : s("text", { x: 0, y: 4.5, "text-anchor": "middle", "font-size": 13, "font-weight": 800, fill: "#fff" }, "!")) : null,
     wrapName(l.name).map((t, i) => s("text", { x: 0, y: 48 + i * 15, "text-anchor": "middle", class: "stop-name", "font-size": 13, fill: P.ink }, t)),
     l.stars ? s("text", { x: 0, y: 48 + wrapName(l.name).length * 15 + 2, "text-anchor": "middle", "font-size": 13 }, "⭐".repeat(Math.min(l.stars, 3))) : null,
   ].flat(Infinity).filter(Boolean));          // DOM append() would turn arrays and null into text, so flatten first

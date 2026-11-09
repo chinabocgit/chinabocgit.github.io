@@ -57,3 +57,10 @@
   .pet-walker { animation: hop 1.1s ease-in-out infinite; }
   @keyframes hop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 }
+
+/* Teacher assignments card */
+.asg-card { background: var(--chip); }
+.asg-list { list-style: none; margin: 6px 0 10px; padding: 0; display: grid; gap: 8px; }
+.asg-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; background: var(--card); border: 2px solid var(--line); border-radius: 12px; padding: 8px 12px; }
+.asg-main { flex: 1; min-width: 160px; }
+.pin { pointer-events: none; }
