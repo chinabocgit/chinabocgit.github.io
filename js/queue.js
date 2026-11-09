@@ -1,8 +1,8 @@
 // Offline-safe answer queue. Every answer is saved locally first, then sent; it is removed only after the server
 // gives a definite answer for it (graded / duplicate / rejected). Network failures keep it for a later retry.
 // Sending the same client_uuid again is safe: the server returns the earlier result without double counting.
-import { rpc, ApiError } from "./api.js?v=8cb5e7bc";
-import { deviceId } from "./session.js?v=8cb5e7bc";
+import { rpc, ApiError } from "./api.js?v=f32adc9d";
+import { deviceId } from "./session.js?v=f32adc9d";
 
 const key = sid => "lg2-queue-" + sid;
 const CHUNK = 50;                                   // server accepts 1..50 items per call

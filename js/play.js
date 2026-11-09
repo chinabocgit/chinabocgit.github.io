@@ -2,15 +2,15 @@
 //  - Practice: instant client-side feedback; every answer is re-graded by the server when the run is sent at the end.
 //  - Assignment: the server grades each answer (the page never receives answers before submitting).
 // Both paths save answers locally first (queue.js), so a dropped connection never loses work.
-import { el } from "./dom.js?v=8cb5e7bc";
-import { sb, rpc, ApiError } from "./api.js?v=8cb5e7bc";
-import { requireStudent } from "./session.js?v=8cb5e7bc";
-import { select } from "./data.js?v=8cb5e7bc";
-import { gradeAnswer, describeAnswer } from "./grade.js?v=8cb5e7bc";
-import { enqueue, flush, pendingCodes } from "./queue.js?v=8cb5e7bc";
-import { renderQuestion, focusQuestion } from "./qview.js?v=8cb5e7bc";
-import { setSafeHtml } from "./sanitize.js?v=8cb5e7bc";
-import { playCorrect, playWrong, playStar, playFanfare } from "./sound.js?v=8cb5e7bc";
+import { el } from "./dom.js?v=f32adc9d";
+import { sb, rpc, ApiError } from "./api.js?v=f32adc9d";
+import { requireStudent } from "./session.js?v=f32adc9d";
+import { select, loadMapData, buildMap, recommendNext } from "./data.js?v=f32adc9d";
+import { gradeAnswer, describeAnswer } from "./grade.js?v=f32adc9d";
+import { enqueue, flush, pendingCodes } from "./queue.js?v=f32adc9d";
+import { renderQuestion, focusQuestion } from "./qview.js?v=f32adc9d";
+import { setSafeHtml } from "./sanitize.js?v=f32adc9d";
+import { playCorrect, playWrong, playStar, playFanfare } from "./sound.js?v=f32adc9d";
 
 const params = new URLSearchParams(location.search);
 const levelId = params.get("level");
@@ -41,6 +41,18 @@ function html(cls, content) { const e = el("div", { class: cls }); setSafeHtml(e
 if (!levelId && !asgId) message("warn", "沒有指定要玩的關卡。");
 else if (levelId) await startPractice();
 else await startAssignment();
+
+// After a result page: suggest the next level so the child never hits a dead end (no teacher needed).
+async function addNextButton(afterLevelId) {
+  try {
+    const rec = recommendNext(buildMap(await loadMapData(me)), afterLevelId);
+    const row = app.querySelector(".result .row");
+    if (!row) return;
+    if (rec.level) row.prepend(el("a", { class: "btn go", href: "play.html?level=" + encodeURIComponent(rec.level.id) },
+      "▶ 下一關：" + rec.level.name + (rec.kind === "gold" ? "（挑戰金色）" : "")));
+    else row.before(el("p", { class: "msg ok" }, "🏆 全部關卡都拿到金色了！"));
+  } catch { /* the buttons we already show are enough */ }
+}
 
 /* ===================== Practice ===================== */
 async function startPractice() {
@@ -190,7 +202,7 @@ function showPracticeResult(lv, run, byCode, fresh = false) {
         wrongs.length ? el("a", { class: "btn ghost", href: "wrongbook.html" }, "📒 去錯題本訂正") : null,
         run.summary && run.summary.attemptId ? el("a", { class: "btn ghost", href: "attempt.html?id=" + encodeURIComponent(run.summary.attemptId) }, "🧾 每題詳情") : null)),
     wrongs.length ? el("div", { class: "card" }, el("h2", null, "答錯的題目（" + wrongs.length + "）"),
-      ...wrongs.map(c => wrongItem(byCode.get(c), run.answers[c], run.payloads[c]))) : el("div", { class: "card" }, el("p", null, "🎉 全部答對！")));
+      ...wrongs.map(c => wrongItem(byCode.get(c), run.answers[c], run.payloads[c]))) : el("div", { class: "card" }, el("p", null, "🎉 全部答對！")));  addNextButton(levelId);
 }
 
 function wrongItem(q, a, payload) {
@@ -314,4 +326,5 @@ function showAssignmentResult(data, run) {
         r.explanation ? html("explain", "📘 " + r.explanation) : null)))
       : (att && att.finished && !unknown ? el("div", { class: "card" }, el("p", null, "🎉 全部答對！")) : null),
   ].filter(Boolean));
+  addNextButton(null);
 }

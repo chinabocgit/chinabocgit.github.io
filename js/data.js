@@ -1,5 +1,5 @@
 // Loads everything the map page needs in one go (curriculum is public read; rewards, theme and assignments are RPCs).
-import { sb, rpc, ApiError } from "./api.js?v=8cb5e7bc";
+import { sb, rpc, ApiError } from "./api.js?v=f32adc9d";
 
 export async function select(query) {
   const { data, error } = await query;
@@ -74,4 +74,20 @@ export function buildMap(d) {
     return { subject, units };
   });
   return out;
+}
+
+// What should the child play next? Keeps the game going without a teacher: first new levels (after the one just played,
+// then from the start), then levels cleared without gold ("go for gold"), then nothing (everything is gold).
+// `map` is the result of buildMap(); only playable, unlocked levels are suggested.
+export function recommendNext(map, afterLevelId) {
+  const flat = map.flatMap(m => m.units.flatMap(u => u.levels)).filter(l => l.playable && !l.lock);
+  const after = flat.findIndex(l => l.id === afterLevelId);
+  const order = after < 0 ? flat : [...flat.slice(after + 1), ...flat.slice(0, after + 1)];       // forward first, then wrap around
+  const fresh = order.find(l => l.state === "new" && l.id !== afterLevelId);
+  if (fresh) return { level: fresh, kind: "new" };
+  const gold = order.find(l => l.state === "cleared");
+  if (gold) return { level: gold, kind: "gold" };
+  const same = flat.find(l => l.id === afterLevelId && l.state === "new");
+  if (same) return { level: same, kind: "new" };
+  return { level: null, kind: "all" };
 }

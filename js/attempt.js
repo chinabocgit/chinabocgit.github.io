@@ -1,10 +1,10 @@
 // One attempt, question by question: your answer, right or wrong, the correct answer and the explanation.
 // For an assignment that is not finished yet we never show answers or explanations, even if the server would send them.
-import { el } from "./dom.js?v=8cb5e7bc";
-import { rpc, ApiError } from "./api.js?v=8cb5e7bc";
-import { requireStudent } from "./session.js?v=8cb5e7bc";
-import { setSafeHtml } from "./sanitize.js?v=8cb5e7bc";
-import { describeAnswer, describeResponse } from "./grade.js?v=8cb5e7bc";
+import { el } from "./dom.js?v=f32adc9d";
+import { rpc, ApiError } from "./api.js?v=f32adc9d";
+import { requireStudent } from "./session.js?v=f32adc9d";
+import { setSafeHtml } from "./sanitize.js?v=f32adc9d";
+import { describeAnswer, describeResponse } from "./grade.js?v=f32adc9d";
 
 const app = document.getElementById("app");
 const me = await requireStudent();

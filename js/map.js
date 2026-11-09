@@ -1,10 +1,10 @@
 // Map home: subject tabs, units as blocks, levels as lamps, rewards summary, open-assignment banner.
-import { el } from "./dom.js?v=8cb5e7bc";
-import { ApiError } from "./api.js?v=8cb5e7bc";
-import { requireStudent, onTick, logout } from "./session.js?v=8cb5e7bc";
-import { loadMapData, buildMap } from "./data.js?v=8cb5e7bc";
-import { applyTheme } from "./theme.js?v=8cb5e7bc";
-import { renderMap } from "./mapview.js?v=8cb5e7bc";
+import { el } from "./dom.js?v=f32adc9d";
+import { ApiError } from "./api.js?v=f32adc9d";
+import { requireStudent, onTick, logout } from "./session.js?v=f32adc9d";
+import { loadMapData, buildMap, recommendNext } from "./data.js?v=f32adc9d";
+import { applyTheme } from "./theme.js?v=f32adc9d";
+import { renderMap } from "./mapview.js?v=f32adc9d";
 
 const app = document.getElementById("app");
 const me = await requireStudent();
@@ -51,7 +51,7 @@ function render() {
       el("a", { class: "pill", href: "rewards.html", style: "text-decoration:none;color:inherit" },
         "🎒 我的收藏" + (state.chests ? "　🎁 " + state.chests : ""))));
 
-  const parts = [navRow()];
+  const parts = [state.map.length ? continueCard() : null, navRow()];
   if (state.asg.length) parts.push(assignmentBanner());
   if (!state.map.length) {
     parts.push(el("div", { class: "card empty" },
@@ -66,7 +66,23 @@ function render() {
     if (state.selected) parts.push(detail(state.selected));
   }
   parts.push(footer());
-  app.replaceChildren(...parts);
+  app.replaceChildren(...parts.filter(Boolean));
+  if (!state.scrolled) {                          // first render only: bring the current stop to the middle of the screen
+    state.scrolled = true;
+    const cur = document.querySelector(".stop.current");
+    if (cur) requestAnimationFrame(() => cur.scrollIntoView({ block: "center", behavior: "auto" }));
+  }
+}
+
+// The child can always keep going without a teacher: one big button for the next level to play.
+function continueCard() {
+  const rec = recommendNext(state.map, null);
+  if (!rec.level) return el("div", { class: "card continue" }, el("b", { class: "big" }, "🏆 全部關卡都拿到金色了！"),
+    el("p", { class: "muted" }, "太厲害了！可以到錯題本複習，或回頭再玩喜歡的關卡。"));
+  return el("div", { class: "card continue" },
+    el("div", { class: "muted" }, rec.kind === "new" ? "接下來玩" : "再挑戰一次，拿金色！"),
+    el("b", { class: "big" }, rec.level.name),
+    el("div", { class: "row" }, el("a", { class: "btn go", href: "play.html?level=" + encodeURIComponent(rec.level.id) }, "▶ 繼續闖關")));
 }
 
 function navRow() {

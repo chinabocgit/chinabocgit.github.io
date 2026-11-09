@@ -1,7 +1,7 @@
 // Class settings: class code (regenerate), theme, and textbook version per subject. Homeroom teacher only (the database enforces it).
-import { el } from "../../js/dom.js?v=8cb5e7bc";
-import { sb, rpc, select, ApiError } from "./tapi.js?v=8cb5e7bc";
-import { requireTeacher, signOut } from "./tsession.js?v=8cb5e7bc";
+import { el } from "../../js/dom.js?v=f32adc9d";
+import { sb, rpc, select, ApiError } from "./tapi.js?v=f32adc9d";
+import { requireTeacher, signOut } from "./tsession.js?v=f32adc9d";
 
 const app = document.getElementById("app");
 const me = await requireTeacher();
