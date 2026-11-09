@@ -1,0 +1,13 @@
+/* Theme "town" (火花小鎮): warm daytime, paper texture feel. Lamps = levels; clearing a level lights its lamp. */
+:root[data-theme="town"] {
+  --bg: #f6efe1; --card: #fffdf7; --ink: #3b3226; --mute: #7a6a52; --line: #e8d9bb;
+  --brand: #b7410e; --brand-ink: #ffffff; --accent: #2f6fed; --chip: #fff1e6;
+}
+:root[data-theme="town"] .unit { background: linear-gradient(#fffdf7, #fbf4e4); }
+:root[data-theme="town"] .path::before {
+  content: ""; position: absolute; left: 8px; right: 8px; top: 44px; height: 14px; z-index: 0;
+  background: #e6d6b4; border-radius: 999px;
+}
+:root[data-theme="town"] .lamp { position: relative; z-index: 1; }
+:root[data-theme="town"] .lamp[data-state="cleared"] .dot,
+:root[data-theme="town"] .lamp[data-state="gold"] .dot { box-shadow: 0 0 0 6px #ffd16633, 0 0 14px 4px #ffd166; }

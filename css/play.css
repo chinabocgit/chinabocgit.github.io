@@ -1,0 +1,31 @@
+.back, a.btn { text-decoration: none; }
+a.btn { display: inline-flex; align-items: center; min-height: 44px; padding: 10px 18px; border: 2px solid var(--brand); background: var(--brand); color: var(--brand-ink); border-radius: 12px; }
+a.btn.ghost { background: transparent; color: var(--brand); }
+.back { color: var(--brand); font-weight: 700; }
+.progress { height: 10px; background: var(--chip); border-radius: 999px; margin-top: 8px; overflow: hidden; }
+.progress .bar { height: 100%; background: var(--brand); transition: width .3s; }
+.question .stem { font-size: 22px; line-height: 1.7; margin: 10px 0 14px; }
+.stem table, .datacard-body table { border-collapse: collapse; margin: 8px 0; }
+.stem th, .stem td, .datacard-body th, .datacard-body td { border: 1px solid var(--line); padding: 4px 10px; text-align: center; }
+.datacard { background: var(--chip); border: 2px solid var(--line); border-radius: 12px; padding: 8px 12px; margin: 8px 0; }
+.datacard summary { font-weight: 700; cursor: pointer; }
+.answer { display: grid; gap: 10px; margin: 8px 0; }
+.answer[data-qtype="tf"] { grid-template-columns: 1fr 1fr; }
+.opt { text-align: left; background: var(--card); color: var(--ink); border-color: var(--line); font-size: 20px; }
+.opt[aria-pressed="true"] { border-color: var(--brand); background: var(--chip); font-weight: 700; }
+.answer[data-qtype="tf"] .opt { text-align: center; }
+input.fill { max-width: 100%; font-size: 22px; }
+.order-picked, .order-pool { display: flex; flex-wrap: wrap; gap: 8px; min-height: 50px; align-items: center; }
+.order-picked { border: 2px dashed var(--line); border-radius: 12px; padding: 8px; }
+.chip { background: var(--chip); color: var(--ink); border-color: var(--line); font-size: 20px; }
+.chip.on { background: var(--brand); color: var(--brand-ink); border-color: var(--brand); }
+.hints .hint { background: var(--chip); border-radius: 12px; padding: 6px 12px; margin: 6px 0; }
+.feedback .explain { margin: 8px 0 0; }
+.result .big { margin: 6px 0; }
+.wrong { border-top: 2px dashed var(--line); padding-top: 10px; margin-top: 10px; }
+.wrong .stem { font-size: 18px; }
+.empty { text-align: center; padding: 24px 12px; }
+.wb-item { border-top: 1px dashed var(--line); padding: 8px 0; }
+.wb-item summary { cursor: pointer; font-size: 18px; display: list-item; padding: 10px 0; min-height: 44px; }
+.wb-item > * + * { margin: 6px 0 0 18px; }
+nav.row .btn { text-decoration: none; }

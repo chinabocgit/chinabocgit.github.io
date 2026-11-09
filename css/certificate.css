@@ -1,0 +1,22 @@
+/* Certificate: looks the same on screen and on paper (A4 landscape). Own artwork only (CSS borders + emoji). */
+.cert-wrap { max-width: 900px; margin: 0 auto; display: grid; gap: 12px; }
+.cert {
+  background: #fffdf5; color: #3b3226; text-align: center; padding: 36px 28px; aspect-ratio: 297 / 210;
+  border: 10px double #d9632b; outline: 3px solid #e0a800; outline-offset: -22px; border-radius: 6px;
+  display: grid; align-content: center; gap: 10px;
+}
+.cert .org { font-size: 18px; letter-spacing: 6px; color: #d9632b; font-weight: 700; }
+.cert h1 { margin: 0; font-size: clamp(30px, 6vw, 56px); letter-spacing: 10px; }
+.cert .name { font-size: clamp(26px, 5vw, 44px); font-weight: 800; border-bottom: 3px solid #e0a800; display: inline-block; padding: 0 24px; margin: 6px auto; }
+.cert .body { font-size: clamp(16px, 2.6vw, 24px); line-height: 1.8; }
+.cert .foot { display: flex; justify-content: space-around; font-size: clamp(14px, 2vw, 20px); margin-top: 10px; }
+.cert .seal { font-size: clamp(36px, 6vw, 64px); }
+@page { size: A4 landscape; margin: 10mm; }
+@media print {
+  body { background: #fff; }
+  .noprint, header.top, .actions { display: none !important; }
+  main { padding: 0; max-width: none; }
+  .cert { width: 100%; height: 190mm; aspect-ratio: auto; page-break-inside: avoid; }
+}
+/* The certificate is wider than the default page column; widen it so it stays centered. */
+@media screen { main { max-width: 900px; } }
