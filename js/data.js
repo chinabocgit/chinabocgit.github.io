@@ -1,5 +1,5 @@
 // Loads everything the map page needs in one go (curriculum is public read; rewards, theme and assignments are RPCs).
-import { sb, rpc, ApiError } from "./api.js?v=4037fd25";
+import { sb, rpc, ApiError } from "./api.js?v=b67c1e52";
 
 export async function select(query) {
   const { data, error } = await query;
@@ -8,7 +8,7 @@ export async function select(query) {
 }
 
 export async function loadMapData(me) {
-  const [rewards, theme, asg, subjects, books, chests] = await Promise.all([
+  const [rewards, theme, asg, subjects, books, chests, pets] = await Promise.all([
     rpc("rpc_my_rewards"),
     rpc("rpc_my_theme"),
     rpc("rpc_my_assignments"),
@@ -17,6 +17,7 @@ export async function loadMapData(me) {
       ? select(sb.from("books").select("id,subject_id,grade,semester").eq("grade", me.grade).eq("semester", me.semester))
       : Promise.resolve([]),
     rpc("rpc_my_chests"),
+    rpc("rpc_my_pets").catch(() => null),          // the map still works without the pet
   ]);
   const bookIds = books.map(b => b.id);
   const units = bookIds.length
@@ -26,7 +27,7 @@ export async function loadMapData(me) {
   const levels = unitIds.length
     ? await select(sb.from("levels").select("id,unit_id,seq,name,kind,question_count,is_open").in("unit_id", unitIds).eq("is_open", true).order("seq"))
     : [];
-  return { rewards, theme, asg, subjects, books, units, levels, chests };
+  return { rewards, theme, asg, subjects, books, units, levels, chests, pets };
 }
 
 // Merge curriculum, rewards and assignments into: [{subject, units:[{unit, levels:[{...level, state, stars, lockedBy}]}]}]

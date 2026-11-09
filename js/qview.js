@@ -1,7 +1,7 @@
 // Renders one question: data card, stem, answer controls (choice / tf / fill / order), 3-level hints, feedback.
 // All database-provided text goes through setSafeHtml; the only plain-text inputs are the child's own typing.
-import { el } from "./dom.js?v=4037fd25";
-import { setSafeHtml } from "./sanitize.js?v=4037fd25";
+import { el } from "./dom.js?v=b67c1e52";
+import { setSafeHtml } from "./sanitize.js?v=b67c1e52";
 
 function html(tag, cls, content) {
   const e = el(tag, cls ? { class: cls } : null);

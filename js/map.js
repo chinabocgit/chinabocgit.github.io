@@ -1,9 +1,10 @@
 // Map home: subject tabs, units as blocks, levels as lamps, rewards summary, open-assignment banner.
-import { el } from "./dom.js?v=4037fd25";
-import { ApiError } from "./api.js?v=4037fd25";
-import { requireStudent, onTick, logout } from "./session.js?v=4037fd25";
-import { loadMapData, buildMap } from "./data.js?v=4037fd25";
-import { applyTheme } from "./theme.js?v=4037fd25";
+import { el } from "./dom.js?v=b67c1e52";
+import { ApiError } from "./api.js?v=b67c1e52";
+import { requireStudent, onTick, logout } from "./session.js?v=b67c1e52";
+import { loadMapData, buildMap } from "./data.js?v=b67c1e52";
+import { applyTheme } from "./theme.js?v=b67c1e52";
+import { renderMap } from "./mapview.js?v=b67c1e52";
 
 const app = document.getElementById("app");
 const me = await requireStudent();
@@ -35,6 +36,7 @@ async function start() {
   state.asg = (data.asg.assignments || []).filter(a => a.status === "open");
   state.rewards = data.rewards;
   state.chests = data.chests ? data.chests.unopened : 0;
+  state.pet = data.pets && data.pets.active_pet_id ? (data.pets.pets.find(p => p.id === data.pets.active_pet_id) || null) : null;
   render();
 }
 
@@ -58,7 +60,9 @@ function render() {
   } else {
     if (state.map.length > 1) parts.push(subjectTabs());
     const cur = state.map[state.subjectIdx];
-    for (const u of cur.units) parts.push(unitBlock(u));
+    parts.push(el("div", { class: "scene-wrap" }, renderMap({ units: cur.units, theme: state.ui.id || "town", pet: state.pet,
+      selectedId: state.selected && state.selected.id, collectibleName: state.ui.collectibleName,
+      onSelect: l => { state.selected = l; render(); } })));
     if (state.selected) parts.push(detail(state.selected));
   }
   parts.push(footer());
