@@ -1,5 +1,5 @@
 // Loads everything the map page needs in one go (curriculum is public read; rewards, theme and assignments are RPCs).
-import { sb, rpc, ApiError } from "./api.js?v=cca6bca5";
+import { sb, rpc, ApiError } from "./api.js?v=8cb5e7bc";
 
 export async function select(query) {
   const { data, error } = await query;
@@ -36,7 +36,8 @@ export function buildMap(d) {
   // A level is locked for practice while a level-scoped assignment on it is open (server rule, shown here only to explain).
   const lockedBy = new Map();
   for (const a of d.asg.assignments || []) {
-    if (a.status === "open" && a.scope_type === "level" && a.level_id) lockedBy.set(a.level_id, a);
+    // handed in already -> the server no longer locks this level for this child (028)
+    if (a.status === "open" && a.scope_type === "level" && a.level_id && !(a.attempt && a.attempt.finished)) lockedBy.set(a.level_id, a);
   }
   // A level the teacher assigned shows a pin: to do / in progress while the assignment is open, "done" once handed in.
   const pinOf = new Map();
