@@ -1,6 +1,6 @@
 // Child session: login, restore, idle timeout, teacher-forced logout detection, logout.
-import { sb, rpc, ApiError, setSessionInvalidHandler } from "./api.js?v=f32adc9d";
-import { SB_KEY, LOGIN_FN, TOUCH_EVERY_MS, REVOKE_POLL_MS } from "./config.js?v=f32adc9d";
+import { sb, rpc, ApiError, setSessionInvalidHandler } from "./api.js?v=9280a08f";
+import { SB_KEY, LOGIN_FN, TOUCH_EVERY_MS, REVOKE_POLL_MS } from "./config.js?v=9280a08f";
 
 const MSG_KEY = "lg_login_msg";
 
@@ -57,7 +57,8 @@ let polling = null;
 const listeners = new Set();
 
 export function getMe() { return me; }
-export function msLeft() { return expiresAt ? expiresAt - Date.now() : 0; }
+// A home device has no expiry (expires_at is null): it never times out, so report "infinite" instead of "already over".
+export function msLeft() { return expiresAt ? expiresAt - Date.now() : Infinity; }
 // Called every second with ms left (for countdown displays).
 export function onTick(fn) { listeners.add(fn); return () => listeners.delete(fn); }
 
@@ -80,13 +81,13 @@ export async function requireStudent() {
     await localLogout("err", "連線有問題，請重新登入。");
     return new Promise(() => {});
   }
-  expiresAt = new Date(me.expires_at);
+  expiresAt = me.expires_at ? new Date(me.expires_at) : null;
   lastTouch = Date.now();
 
   ticking = setInterval(() => {
     const left = msLeft();
     listeners.forEach(fn => fn(left));
-    if (left <= 0) localLogout("warn", "你太久沒有操作，已經自動登出，請重新登入。");
+    if (expiresAt && left <= 0) localLogout("warn", "你太久沒有操作，已經自動登出，請重新登入。");
   }, 1000);
 
   // Read-only poll: notice that a teacher logged everyone out without waiting for the child to click.
@@ -102,7 +103,7 @@ async function activity() {
   lastTouch = Date.now();
   try {
     const data = await rpc("rpc_student_touch");
-    expiresAt = new Date(data.expires_at);
+    expiresAt = data.expires_at ? new Date(data.expires_at) : null;
   } catch { /* session_invalid is handled by the api layer; other errors: try again later */ }
 }
 

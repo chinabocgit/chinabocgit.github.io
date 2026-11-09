@@ -1,10 +1,10 @@
 // Assignments for one class: list, create (level / unit / hand-picked questions), rename, change deadline, close / reopen, delete.
 // All rules (who may assign which subject, scope checks, "no deleting once a child answered") are enforced by the database;
 // this page only collects input and shows the server's message when something is refused.
-import { el } from "../../js/dom.js?v=f32adc9d";
-import { setSafeHtml } from "../../js/sanitize.js?v=f32adc9d";
-import { sb, rpc, select, ApiError } from "./tapi.js?v=f32adc9d";
-import { requireTeacher, signOut } from "./tsession.js?v=f32adc9d";
+import { el } from "../../js/dom.js?v=9280a08f";
+import { setSafeHtml } from "../../js/sanitize.js?v=9280a08f";
+import { sb, rpc, select, ApiError } from "./tapi.js?v=9280a08f";
+import { requireTeacher, signOut } from "./tsession.js?v=9280a08f";
 
 const app = document.getElementById("app");
 const me = await requireTeacher();
