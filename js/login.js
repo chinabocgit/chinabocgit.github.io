@@ -1,6 +1,6 @@
-import { el } from "./dom.js?v=4e265fbc";
-import { PICS, PIC_LEN } from "./config.js?v=4e265fbc";
-import { login, deviceId, takeLoginMessage, hasSavedSession } from "./session.js?v=4e265fbc";
+import { el } from "./dom.js?v=27c00f96";
+import { PICS, PIC_LEN } from "./config.js?v=27c00f96";
+import { login, deviceId, takeLoginMessage, hasSavedSession } from "./session.js?v=27c00f96";
 
 const app = document.getElementById("app");
 const pad2 = n => String(n).padStart(2, "0");
@@ -53,7 +53,8 @@ function render() {
     el("div", { class: "row" },
       el("button", { disabled: busy || picked.length !== PIC_LEN, onclick: doLogin }, busy ? "登入中…" : "登入")),
     msg ? el("div", { class: "msg " + msg.cls, role: "status" }, msg.text) : null,
-    el("p", { class: "muted" }, "我是老師：", el("a", { href: "teacher/index.html" }, "老師登入"))));
+    el("p", { class: "muted" }, "我是老師：", el("a", { href: "teacher/index.html" }, "老師登入"),
+      "　我是家長：", el("a", { href: "parent/index.html" }, "家長登入"))));
   if (focusKey) {
     let n = app.querySelector(focusKey);
     if (!n || n.disabled) n = app.querySelector(".pics button:not(:disabled)") || app.querySelector("button:not(:disabled)");

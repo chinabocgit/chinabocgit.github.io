@@ -1,11 +1,12 @@
 // Teacher session: email + password sign-in (Supabase Auth). Sessions refresh automatically; sign out is manual.
-import { sb, setSessionInvalidHandler } from "./tapi.js?v=4e265fbc";
+import { sb, setSessionInvalidHandler } from "./tapi.js?v=27c00f96";
 
 export const goLogin = () => location.replace("index.html");
 
 export async function signIn(email, password) {
   const { error } = await sb.auth.signInWithPassword({ email: String(email).trim(), password });
   if (error) return { ok: false, text: "登入沒成功，請檢查信箱和密碼。" };
+  markActive();          // a fresh sign-in is activity; otherwise a stale timestamp from an earlier session signs the user out at once
   return { ok: true };
 }
 

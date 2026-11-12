@@ -1,5 +1,5 @@
 // Supabase client and RPC wrapper. Expects the supabase-js UMD script to be loaded before any module.
-import { SB_URL, SB_KEY } from "./config.js?v=4e265fbc";
+import { SB_URL, SB_KEY } from "./config.js?v=27c00f96";
 
 // Separate storage key so the child session never mixes with adult sessions on the same origin.
 export const sb = window.supabase.createClient(SB_URL, SB_KEY, {

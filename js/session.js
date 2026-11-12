@@ -1,7 +1,7 @@
 // Child session: login, restore, idle timeout, teacher-forced logout detection, logout.
-import { sb, rpc, ApiError, setSessionInvalidHandler } from "./api.js?v=4e265fbc";
-import { el } from "./dom.js?v=4e265fbc";
-import { SB_KEY, LOGIN_FN, TOUCH_EVERY_MS, REVOKE_POLL_MS } from "./config.js?v=4e265fbc";
+import { sb, rpc, ApiError, setSessionInvalidHandler } from "./api.js?v=27c00f96";
+import { el } from "./dom.js?v=27c00f96";
+import { SB_KEY, LOGIN_FN, TOUCH_EVERY_MS, REVOKE_POLL_MS } from "./config.js?v=27c00f96";
 
 const MSG_KEY = "lg_login_msg";
 
