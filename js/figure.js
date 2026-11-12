@@ -46,6 +46,30 @@ export function validateFigure(f) {
       if (f.item_mm !== undefined && !int(f.item_mm, 0, f.cm * 10)) return { ok: false, reason: "ruler item" };
       return { ok: true, fig: { type: f.type, cm: f.cm, item_mm: f.item_mm } };
     }
+    case "count_grid": {
+      // A row of counted shapes (for 量詞 and counting questions).
+      if (!int(f.n, 1, 30) || !int(f.cols, 1, 10)) return { ok: false, reason: "count_grid size" };
+      if (f.shape !== undefined && f.shape !== "dot" && f.shape !== "square") return { ok: false, reason: "count_grid shape" };
+      return { ok: true, fig: { type: f.type, n: f.n, cols: f.cols, shape: f.shape || "dot" } };
+    }
+    case "parts": {
+      // Two or three pieces written side by side, joined with "＋" (for 部件 questions).
+      if (!Array.isArray(f.parts) || f.parts.length < 2 || f.parts.length > 3) return { ok: false, reason: "parts count" };
+      if (!f.parts.every(p => typeof p === "string" && Array.from(p).length >= 1 && Array.from(p).length <= 3)) return { ok: false, reason: "parts text" };
+      return { ok: true, fig: { type: f.type, parts: f.parts.slice() } };
+    }
+    case "char_boxes": {
+      // Two to four single characters, each in its own box (for 形近字 questions).
+      if (!Array.isArray(f.chars) || f.chars.length < 2 || f.chars.length > 4) return { ok: false, reason: "char_boxes count" };
+      if (!f.chars.every(c => typeof c === "string" && Array.from(c).length === 1)) return { ok: false, reason: "char_boxes one character each" };
+      return { ok: true, fig: { type: f.type, chars: f.chars.slice() } };
+    }
+    case "steps": {
+      // Two to four short panels joined by arrows, read left to right (for order questions).
+      if (!Array.isArray(f.panels) || f.panels.length < 2 || f.panels.length > 4) return { ok: false, reason: "steps count" };
+      if (!f.panels.every(p => typeof p === "string" && Array.from(p).length >= 1 && Array.from(p).length <= 4)) return { ok: false, reason: "steps text" };
+      return { ok: true, fig: { type: f.type, panels: f.panels.slice() } };
+    }
     default:
       return { ok: false, reason: "unknown type" };
   }
@@ -78,6 +102,10 @@ export function renderFigure(raw, caption) {
   if (f.type === "circle") drawCircle(g, svg, f);
   if (f.type === "fraction_bar") drawFraction(g, svg, f);
   if (f.type === "ruler") drawRuler(g, svg, f);
+  if (f.type === "count_grid") drawCountGrid(g, svg, f);
+  if (f.type === "parts") drawBoxRow(g, svg, f.parts, { joiner: "＋", size: 36 });
+  if (f.type === "char_boxes") drawBoxRow(g, svg, f.chars, { joiner: "", size: 40 });
+  if (f.type === "steps") drawBoxRow(g, svg, f.panels, { joiner: "→", size: 15, boxW: 72, gap: 18 });
   wrap.append(svg);
   if (caption) wrap.append(el1("figcaption", caption));
   return wrap;
@@ -155,6 +183,33 @@ function drawFraction(g, svg, f) {
   }
   g.append(svgEl("rect", { x, y, width: w, height: h }));
   for (let i = 1; i < f.den; i++) g.append(svgEl("line", { x1: x + i * cell, y1: y, x2: x + i * cell, y2: y + h }));
+}
+
+// Counted shapes in rows. Cell size shrinks so that the whole grid always fits the 360x120 box.
+function drawCountGrid(g, svg, f) {
+  const rows = Math.ceil(f.n / f.cols);
+  const cell = Math.min(28, 100 / rows, 320 / f.cols), r = cell * 0.36;
+  const x0 = (360 - f.cols * cell) / 2, y0 = (120 - rows * cell) / 2;
+  for (let i = 0; i < f.n; i++) {
+    const cx = x0 + (i % f.cols) * cell + cell / 2, cy = y0 + Math.floor(i / f.cols) * cell + cell / 2;
+    if (f.shape === "square") svg.append(svgEl("rect", { x: cx - r, y: cy - r, width: 2 * r, height: 2 * r, fill: "#ffb703", stroke: "none" }));
+    else svg.append(svgEl("circle", { cx, cy, r, fill: "#ffb703", stroke: "none" }));
+  }
+}
+
+// A row of boxes with text inside (characters or short words), joined by a symbol.
+function drawBoxRow(g, svg, items, o) {
+  const boxW = o.boxW || 70, boxH = 64, gap = o.gap != null ? o.gap : 26;
+  const total = items.length * boxW + (items.length - 1) * gap;
+  const x0 = (360 - total) / 2, y = (120 - boxH) / 2;
+  items.forEach((text, i) => {
+    const x = x0 + i * (boxW + gap);
+    g.append(svgEl("rect", { x, y, width: boxW, height: boxH, rx: 6 }));
+    svg.append(svgEl("text", { x: x + boxW / 2, y: y + boxH / 2 + o.size * 0.36, "text-anchor": "middle", "font-size": o.size, fill: "#3b3a4a", stroke: "none" }, text));
+    if (i < items.length - 1 && o.joiner) {
+      svg.append(svgEl("text", { x: x + boxW + gap / 2, y: y + boxH / 2 + 8, "text-anchor": "middle", "font-size": 22, fill: "#3b3a4a", stroke: "none" }, o.joiner));
+    }
+  });
 }
 
 function drawRuler(g, svg, f) {

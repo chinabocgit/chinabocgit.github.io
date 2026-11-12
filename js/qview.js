@@ -1,8 +1,21 @@
 // Renders one question: data card, stem, answer controls (choice / tf / fill / order), 3-level hints, feedback.
 // All database-provided text goes through setSafeHtml; the only plain-text inputs are the child's own typing.
-import { el } from "./dom.js?v=bbee0d67";
-import { setSafeHtml } from "./sanitize.js?v=bbee0d67";
-import { renderFigure } from "./figure.js?v=bbee0d67";
+import { el } from "./dom.js?v=0b8b4103";
+import { setSafeHtml } from "./sanitize.js?v=0b8b4103";
+import { renderFigure } from "./figure.js?v=0b8b4103";
+import { validateSpeak, speak } from "./speak.js?v=0b8b4103";
+
+// A "listen" button for questions whose payload has speak text. Returns null when there is nothing valid to read.
+function speakRow(payload) {
+  if (!payload || payload.speak === undefined) return null;
+  const v = validateSpeak(payload.speak, payload.speak_lang);
+  if (!v.ok) return null;
+  const note = el("span", { class: "muted", "aria-live": "polite" });
+  const btn = el("button", { class: "ghost", onclick: () => {
+    if (!speak(v.text, v.lang)) note.textContent = "這個瀏覽器不能朗讀，請直接看題目。";
+  } }, "🔊 聽一聽");
+  return el("div", { class: "row" }, btn, note);
+}
 
 function html(tag, cls, content) {
   const e = el(tag, cls ? { class: cls } : null);
@@ -106,6 +119,7 @@ export function renderQuestion(q, opts) {
       el("summary", null, q.group_title || "資料卡"), html("div", "datacard-body", q.group_content)) : null,
     q.payload && q.payload.figure ? renderFigure(q.payload.figure) : null,
     html("div", "stem", q.stem),
+    speakRow(q.payload),
     controls,
     hintBtn ? el("div", { class: "row" }, hintBtn) : null, hintBox,
     el("div", { class: "row" }, submit),
