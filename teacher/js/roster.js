@@ -1,9 +1,9 @@
 // Roster management: add students in a batch (login cards shown ONCE), approve join requests, edit nickname / seat,
 // remove a student from the class, give an equipment item. All rules live in the database; this page only collects input.
-import { el } from "../../js/dom.js?v=b291c9c9";
-import { PICS } from "../../js/config.js?v=b291c9c9";
-import { sb, rpc, select, ApiError } from "./tapi.js?v=b291c9c9";
-import { requireTeacher, signOut } from "./tsession.js?v=b291c9c9";
+import { el } from "../../js/dom.js?v=bbee0d67";
+import { PICS } from "../../js/config.js?v=bbee0d67";
+import { sb, rpc, select, ApiError } from "./tapi.js?v=bbee0d67";
+import { requireTeacher, signOut } from "./tsession.js?v=bbee0d67";
 
 const app = document.getElementById("app");
 const me = await requireTeacher();

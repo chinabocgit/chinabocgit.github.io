@@ -120,17 +120,18 @@ function drawRect(g, svg, f) {
 }
 
 function drawCircle(g, svg, f) {
-  const cx = 180, cy = 60;
-  const rr = Math.min(50, 5 * f.r + 10);   // drawn size only; the number f.r is shown in the text, not by pixels
+  const cx = 150, cy = 60;
+  const rr = Math.min(50, 8 * f.r + 10);   // drawn size only; the number f.r is shown in the text, not by pixels
   g.append(svgEl("circle", { cx, cy, r: rr }));
   g.append(svgEl("circle", { cx, cy, r: 2.5, fill: "#3b3a4a", stroke: "none" }));
+  // Labels sit outside the circle, to the right, so they never overlap the outline.
   if (f.showRadius) {
     g.append(svgEl("line", { x1: cx, y1: cy, x2: cx + rr, y2: cy }));
-    svg.append(svgEl("text", { x: cx + rr / 2, y: cy - 6, "text-anchor": "middle", "font-size": 13, fill: "#3b3a4a", stroke: "none" }, "半徑"));
+    svg.append(svgEl("text", { x: cx + rr + 10, y: cy - 4, "text-anchor": "start", "font-size": 16, "font-weight": 700, fill: "#3b3a4a", stroke: "none" }, "半徑"));
   }
   if (f.showDiameter) {
     g.append(svgEl("line", { x1: cx - rr, y1: cy, x2: cx + rr, y2: cy, "stroke-dasharray": "4 3" }));
-    svg.append(svgEl("text", { x: cx, y: cy - 6, "text-anchor": "middle", "font-size": 13, fill: "#3b3a4a", stroke: "none" }, "直徑"));
+    svg.append(svgEl("text", { x: cx + rr + 10, y: cy + 5, "text-anchor": "start", "font-size": 16, "font-weight": 700, fill: "#3b3a4a", stroke: "none" }, "直徑"));
   }
 }
 
