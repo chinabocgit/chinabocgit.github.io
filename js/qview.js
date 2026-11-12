@@ -1,7 +1,8 @@
 // Renders one question: data card, stem, answer controls (choice / tf / fill / order), 3-level hints, feedback.
 // All database-provided text goes through setSafeHtml; the only plain-text inputs are the child's own typing.
-import { el } from "./dom.js?v=27c00f96";
-import { setSafeHtml } from "./sanitize.js?v=27c00f96";
+import { el } from "./dom.js?v=b291c9c9";
+import { setSafeHtml } from "./sanitize.js?v=b291c9c9";
+import { renderFigure } from "./figure.js?v=b291c9c9";
 
 function html(tag, cls, content) {
   const e = el(tag, cls ? { class: cls } : null);
@@ -103,6 +104,7 @@ export function renderQuestion(q, opts) {
     el("div", { class: "muted" }, "第 " + opts.index + " / " + opts.total + " 題" + (q.is_literacy ? "・素養題" : "")),
     q.group_content ? el("details", { class: "datacard", open: true },
       el("summary", null, q.group_title || "資料卡"), html("div", "datacard-body", q.group_content)) : null,
+    q.payload && q.payload.figure ? renderFigure(q.payload.figure) : null,
     html("div", "stem", q.stem),
     controls,
     hintBtn ? el("div", { class: "row" }, hintBtn) : null, hintBox,
