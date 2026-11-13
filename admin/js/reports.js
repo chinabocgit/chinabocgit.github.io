@@ -1,9 +1,9 @@
 // Question reports: list reports, mark them fixed or dismissed with an optional note. Fixing the question text itself is done through a new version (not here).
-import { el } from "../../js/dom.js?v=2ccc31aa";
-import { rpc, ApiError } from "../../teacher/js/tapi.js?v=2ccc31aa";
-import { signOut } from "../../teacher/js/tsession.js?v=2ccc31aa";
-import { put, note, gate, navBar } from "./common.js?v=2ccc31aa";
-import { validateReportNote } from "./adminCheck.js?v=2ccc31aa";
+import { el } from "../../js/dom.js?v=b4f364f3";
+import { rpc, ApiError } from "../../teacher/js/tapi.js?v=b4f364f3";
+import { signOut } from "../../teacher/js/tsession.js?v=b4f364f3";
+import { put, note, gate, navBar } from "./common.js?v=b4f364f3";
+import { validateReportNote } from "./adminCheck.js?v=b4f364f3";
 
 document.getElementById("logout").addEventListener("click", signOut);
 let flash = null;

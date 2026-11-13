@@ -56,3 +56,11 @@ select:focus-visible, textarea:focus-visible { outline: 3px solid var(--accent);
 /* Checkboxes and radios: big enough to tap; a label that wraps one stays on one line with it. */
 input[type=checkbox], input[type=radio] { width: 24px; height: 24px; flex: none; accent-color: var(--brand); }
 label.row { display: flex; align-items: center; gap: 10px; color: var(--ink); font-size: 18px; }
+
+/* Small link row at the bottom of the main pages (sponsor page entry). */
+.foot { text-align: center; padding: 18px 12px 28px; font-size: 14px; }
+.foot a { color: inherit; opacity: .75; text-decoration: none; }
+.foot a:hover { opacity: 1; text-decoration: underline; }
+
+/* Keep the hidden attribute working on elements whose class sets display (e.g. buttons). */
+[hidden] { display: none !important; }

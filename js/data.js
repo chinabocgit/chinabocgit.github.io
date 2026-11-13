@@ -1,5 +1,5 @@
 // Loads everything the map page needs in one go (curriculum is public read; rewards, theme and assignments are RPCs).
-import { sb, rpc, ApiError } from "./api.js?v=2ccc31aa";
+import { sb, rpc, ApiError } from "./api.js?v=b4f364f3";
 
 export async function select(query) {
   const { data, error } = await query;

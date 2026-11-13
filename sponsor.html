@@ -3,35 +3,42 @@
 <head>
 <meta name="robots" content="noindex, nofollow">
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-Qo+xrlXevPvY7uFNnIE86rjot0l5R/Fg/eXrzsexIgc='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://oaikkspkqdfoejjlusvk.supabase.co; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.jsdelivr.net 'sha256-BuEsYzS6q6Vi2l9jNXemTKJCh7QGRuPt5aX2poUzrdA='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://oaikkspkqdfoejjlusvk.supabase.co; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>支持我們｜微小星火</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="css/base.css?v=2ccc31aa">
-<link rel="stylesheet" href="css/play.css?v=2ccc31aa">
+<link rel="stylesheet" href="css/base.css?v=b4f364f3">
+<link rel="stylesheet" href="css/play.css?v=b4f364f3">
 </head>
 <body>
-<header class="top"><a class="back" href="map.html">← 回地圖</a><span class="sp"></span></header>
+<header class="top"><a class="back" id="back" href="map.html">← 回地圖</a><span class="sp"></span></header>
 <h1 class="sr-only">支持微小星火</h1>
 <main>
   <section class="card">
     <h2>支持微小星火</h2>
-    <p>微小星火是免費的課業複習遊戲，所有孩子都可以免費使用。</p>
-    <p>如果你覺得它對孩子有幫助，歡迎用贊助的方式支持我們持續更新題庫與功能。贊助是自願的，不贊助也完全不影響使用。</p>
-    <p class="muted">贊助的金額會用來支付網站與資料庫的費用，以及題目的整理與更新。</p>
+    <p>微小星火是免費的課業複習遊戲，所有孩子都可以免費使用。贊助完全自願，不贊助也不影響任何功能。</p>
+    <p><b>給家長與老師：</b>贊助會用在網站與資料庫的費用、題目的整理與更新，以及新功能的開發。</p>
+    <p class="muted">付款在贊助平台上進行，本站不會收集你的付款資料。請由大人操作。</p>
     <p id="status" class="muted"></p>
-    <p><a id="donate" class="btn" href="#" rel="noopener" target="_blank" hidden>我要贊助</a></p>
+    <p><a id="donate" class="btn" href="#" rel="noopener" target="_blank" hidden>前往贊助頁（開啟新視窗）</a></p>
   </section>
   <section class="card">
     <h2>感謝你</h2>
     <p>感謝每一位家長、老師與朋友的支持。</p>
-    <p class="muted">如果有任何問題或建議，歡迎透過平台的意見回饋告訴我們。</p>
   </section>
 </main>
 <script type="module">
-import { SB_URL, SB_KEY } from "./js/config.js?v=2ccc31aa";
+import { SB_URL, SB_KEY } from "./js/config.js?v=b4f364f3";
 const a = document.getElementById("donate");
 const status = document.getElementById("status");
+// Parents and teachers arrive from their own pages (?from=parent|teacher); the back link returns them there. Anyone else goes to the map.
+const BACK = { parent: "parent/home.html", teacher: "teacher/classes.html" };
+const from = new URLSearchParams(location.search).get("from");
+if (Object.hasOwn(BACK, from)) {
+  const back = document.getElementById("back");
+  back.href = BACK[from];
+  back.textContent = "← 返回";
+}
 // Public settings only (platform name and sponsor link), read without signing in.
 // The link is used only when it is a plain https:// address; anything else means "not open yet".
 async function loadSettings() {
