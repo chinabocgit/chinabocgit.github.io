@@ -1,5 +1,5 @@
 // Teacher session: email + password sign-in (Supabase Auth). Sessions refresh automatically; sign out is manual.
-import { sb, setSessionInvalidHandler } from "./tapi.js?v=d7265520";
+import { sb, setSessionInvalidHandler } from "./tapi.js?v=6c9c2d82";
 
 export const goLogin = () => location.replace("index.html");
 
@@ -48,5 +48,25 @@ export async function requireTeacher() {
     name = (p && p.display_name) || "";
   } catch { /* the name is optional */ }
   startIdleWatch();
+  await addAdminLink(u.id);
   return { id: u.id, email: u.email, name };
+}
+
+// Administrators see a link to the admin pages in the header and the label "老師・管理者". Everyone else sees nothing new.
+// The admin pages check the role again, so this link is only a shortcut.
+async function addAdminLink(uid) {
+  try {
+    const { data } = await sb.from("user_roles").select("role").eq("user_id", uid).eq("role", "admin");
+    if (!data || !data.length) return;
+    const header = document.querySelector("header.top");
+    if (!header || document.getElementById("admin-link")) return;
+    const label = header.querySelector(".muted");
+    if (label) label.textContent = "老師・管理者";
+    const a = document.createElement("a");
+    a.id = "admin-link";
+    a.href = "../admin/";
+    a.textContent = "管理者頁面";
+    a.style.cssText = "padding:6px 12px;border:2px solid var(--brand);border-radius:10px;color:var(--brand);text-decoration:none;font-weight:700;";
+    header.insertBefore(a, document.getElementById("logout") || null);
+  } catch { /* the shortcut is optional */ }
 }
