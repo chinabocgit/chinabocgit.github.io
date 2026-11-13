@@ -33,11 +33,25 @@ function face(root, ex, ey, smileY) {
 // Draws the body for a pet type. Each type has its own silhouette.
 function body(root, petId, type) {
   const c = BODY[petId] || "#c9b28a";
-  if (petId === "sparky") {   // 小火花 is a little flame (still the cute type)
+  if (petId === "sparky") {   // 小火花：精靈版（半透明的火焰身體，金黃核心，頭頂火苗，周圍閃光）
     root.append(
-      svg("path", { id: "flame", d: "M60 20 C70 38 92 50 92 78 C92 98 78 106 60 106 C42 106 28 98 28 78 C28 62 38 54 46 42 C48 54 52 58 58 60 C56 46 56 32 60 20 Z", fill: c }),
-      svg("path", { d: "M60 58 C68 68 74 74 74 84 C74 96 66 100 60 100 C54 100 46 96 46 84 C46 76 52 70 60 58 Z", fill: "#ffd23f" }));
-    face(root, 60, 80, 92);
+      // 半透明的外焰
+      svg("path", { id: "flame", d: "M60 14 C70 34 94 48 94 78 C94 100 80 108 60 108 C40 108 26 100 26 78 C26 60 40 48 50 34 C52 46 54 52 58 56 C58 42 58 28 60 14 Z", fill: "#ff7a2a", "fill-opacity": 0.82 }),
+      // 頭頂的小火苗
+      svg("path", { d: "M44 40 C40 32 46 26 44 18 C52 26 52 34 50 40 Z", fill: "#ff9a4a", "fill-opacity": 0.8 }),
+      svg("path", { d: "M76 40 C80 32 74 26 76 18 C68 26 68 34 70 40 Z", fill: "#ff9a4a", "fill-opacity": 0.8 }),
+      // 金黃色核心
+      svg("path", { d: "M60 50 C68 62 74 70 74 82 C74 94 66 98 60 98 C54 98 46 94 46 82 C46 70 52 62 60 50 Z", fill: "#ffd23f" }),
+      svg("path", { d: "M60 66 C63 72 65 76 65 82 C65 88 62 90 60 90 C58 90 55 88 55 82 C55 76 57 72 60 66 Z", fill: "#fff3b0" }));
+    // 靈動的眼睛（有高光）
+    root.append(
+      svg("circle", { cx: 52, cy: 82, r: 4.5, fill: "#333" }), svg("circle", { cx: 68, cy: 82, r: 4.5, fill: "#333" }),
+      svg("circle", { cx: 53.5, cy: 80.5, r: 1.4, fill: "#fff" }), svg("circle", { cx: 69.5, cy: 80.5, r: 1.4, fill: "#fff" }),
+      svg("path", { d: "M54 94 q6 5 12 0", stroke: "#333", "stroke-width": 2.5, fill: "none", "stroke-linecap": "round" }));
+    // 周圍的細小閃光
+    for (const [x, y, r] of [[18, 36, 4], [102, 52, 3.5], [16, 92, 3], [104, 96, 3.5], [60, 6, 2.5]]) {
+      root.append(svg("path", { d: `M${x} ${y - r} L${x + r * 0.35} ${y - r * 0.35} L${x + r} ${y} L${x + r * 0.35} ${y + r * 0.35} L${x} ${y + r} L${x - r * 0.35} ${y + r * 0.35} L${x - r} ${y} L${x - r * 0.35} ${y - r * 0.35} Z`, fill: "#fff3b0" }));
+    }
     return;
   }
   switch (type) {
