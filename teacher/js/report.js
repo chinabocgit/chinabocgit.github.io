@@ -1,10 +1,10 @@
 // Assignment report: who finished, score distribution, and per-question correct rate with the common wrong answers.
 // Teachers see the correct answers (the database allows it); nothing here is shown to children.
-import { el } from "../../js/dom.js?v=858b6233";
-import { setSafeHtml } from "../../js/sanitize.js?v=858b6233";
-import { describeAnswer } from "../../js/grade.js?v=858b6233";
-import { rpc, ApiError } from "./tapi.js?v=858b6233";
-import { requireTeacher, signOut } from "./tsession.js?v=858b6233";
+import { el } from "../../js/dom.js?v=6efbd73f";
+import { setSafeHtml } from "../../js/sanitize.js?v=6efbd73f";
+import { describeAnswer } from "../../js/grade.js?v=6efbd73f";
+import { rpc, ApiError } from "./tapi.js?v=6efbd73f";
+import { requireTeacher, signOut } from "./tsession.js?v=6efbd73f";
 
 const app = document.getElementById("app");
 const me = await requireTeacher();

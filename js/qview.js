@@ -1,9 +1,10 @@
 // Renders one question: data card, stem, answer controls (choice / tf / fill / order), 3-level hints, feedback.
 // All database-provided text goes through setSafeHtml; the only plain-text inputs are the child's own typing.
-import { el } from "./dom.js?v=858b6233";
-import { setSafeHtml } from "./sanitize.js?v=858b6233";
-import { renderFigure } from "./figure.js?v=858b6233";
-import { validateSpeak, speak } from "./speak.js?v=858b6233";
+import { el } from "./dom.js?v=6efbd73f";
+import { setSafeHtml } from "./sanitize.js?v=6efbd73f";
+import { renderFigure } from "./figure.js?v=6efbd73f";
+import { validateSpeak, speak } from "./speak.js?v=6efbd73f";
+import { sendReport } from "./report.js?v=6efbd73f";
 
 // A "listen" button for questions whose payload has speak text. Returns null when there is nothing valid to read.
 function speakRow(payload) {
@@ -25,6 +26,23 @@ function html(tag, cls, content) {
 
 // After a new question is drawn, move keyboard / screen-reader focus to it instead of leaving it on a removed element.
 export function focusQuestion(root) { root.tabIndex = -1; root.focus({ preventScroll: true }); window.scrollTo(0, 0); }
+
+// "This question has a problem": opens a box, then records the report for the administrators. Answering is not affected.
+function reportRow(q) {
+  if (!q || !q.question_code) return null;
+  const status = el("span", { class: "muted", "aria-live": "polite" });
+  const box = el("textarea", { rows: 2, maxlength: 300, "aria-label": "回報說明", placeholder: "哪裡怪怪的？（例如：答案好像不對）" });
+  const panel = el("div", { class: "report-panel", hidden: true }, box, el("button", { class: "ghost", onclick: async () => {
+    try {
+      const r = await sendReport(q.question_code, box.value);
+      if (!r.ok) { status.textContent = r.text; return; }
+      status.textContent = "已收到，謝謝你！管理者會再確認。";
+      box.value = ""; panel.hidden = true;
+    } catch (e) { status.textContent = (e && e.friendly) || "送出沒成功，請稍後再試。"; }
+  } }, "送出回報"));
+  const toggle = el("button", { class: "ghost", onclick: () => { panel.hidden = !panel.hidden; if (!panel.hidden) box.focus(); } }, "🚩 這題有問題");
+  return el("div", { class: "report" }, toggle, status, panel);
+}
 
 // q: question from the server. opts: { index, total, hints: string[] (may be empty), onSubmit(resp, hintsUsed, seconds) }
 // Returns { root, showFeedback(fb), lock() }.
@@ -123,7 +141,8 @@ export function renderQuestion(q, opts) {
     controls,
     hintBtn ? el("div", { class: "row" }, hintBtn) : null, hintBox,
     el("div", { class: "row" }, submit),
-    feedback);
+    feedback,
+    reportRow(q));
 
   return {
     root,

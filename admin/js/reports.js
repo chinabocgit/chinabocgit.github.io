@@ -1,9 +1,9 @@
 // Question reports: list reports, mark them fixed or dismissed with an optional note. Fixing the question text itself is done through a new version (not here).
-import { el } from "../../js/dom.js?v=858b6233";
-import { rpc, ApiError } from "../../teacher/js/tapi.js?v=858b6233";
-import { signOut } from "../../teacher/js/tsession.js?v=858b6233";
-import { put, note, gate, navBar } from "./common.js?v=858b6233";
-import { validateReportNote } from "./adminCheck.js?v=858b6233";
+import { el } from "../../js/dom.js?v=6efbd73f";
+import { rpc, ApiError } from "../../teacher/js/tapi.js?v=6efbd73f";
+import { signOut } from "../../teacher/js/tsession.js?v=6efbd73f";
+import { put, note, gate, navBar } from "./common.js?v=6efbd73f";
+import { validateReportNote } from "./adminCheck.js?v=6efbd73f";
 
 document.getElementById("logout").addEventListener("click", signOut);
 let flash = null;
@@ -21,7 +21,7 @@ function card(r, reload) {
   };
   const open = r.status === "open";
   return el("section", { class: "card" },
-    el("p", { class: "muted" }, new Date(r.created_at).toLocaleString("zh-TW") + "　狀態：" + r.status + (r.reporter_email ? "　回報人：" + r.reporter_email : "")),
+    el("p", { class: "muted" }, new Date(r.created_at).toLocaleString("zh-TW") + "　狀態：" + r.status + "　回報人：" + (r.reporter_kind === "student" ? "孩子" : (r.reporter_email || "大人"))),
     el("p", null, "題目：" + (r.question_stem || "")),
     el("p", null, "回報原因：" + r.reason),
     r.admin_note ? el("p", { class: "muted" }, "管理者備註：" + r.admin_note) : null,
