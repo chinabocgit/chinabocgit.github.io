@@ -1,7 +1,7 @@
 // Self-drawn pet (SVG) with equipment shown as emoji around it. No external images.
 // The shape of the pet depends on its type (可愛型／動物型／人偶型／文具型／文書型). Types must match _supabase/2E/031.
 const NS = "http://www.w3.org/2000/svg";
-const BODY = { sparky: "#f7a440", glow: "#7fd6a0", rail: "#7aa7e8", letter: "#f5e6b8", pencil: "#f2c94c" };
+const BODY = { sparky: "#ff7a2a", glow: "#7fd6a0", rail: "#7aa7e8", letter: "#f5e6b8", pencil: "#f2c94c" };
 
 export const PET_TYPE = { sparky: "cute", glow: "animal", rail: "doll", letter: "document", pencil: "stationery" };
 export const TYPE_LABEL = { cute: "可愛型", animal: "動物型", doll: "人偶型", stationery: "文具型", document: "文書型" };
@@ -33,6 +33,13 @@ function face(root, ex, ey, smileY) {
 // Draws the body for a pet type. Each type has its own silhouette.
 function body(root, petId, type) {
   const c = BODY[petId] || "#c9b28a";
+  if (petId === "sparky") {   // 小火花 is a little flame (still the cute type)
+    root.append(
+      svg("path", { id: "flame", d: "M60 20 C70 38 92 50 92 78 C92 98 78 106 60 106 C42 106 28 98 28 78 C28 62 38 54 46 42 C48 54 52 58 58 60 C56 46 56 32 60 20 Z", fill: c }),
+      svg("path", { d: "M60 58 C68 68 74 74 74 84 C74 96 66 100 60 100 C54 100 46 96 46 84 C46 76 52 70 60 58 Z", fill: "#ffd23f" }));
+    face(root, 60, 80, 92);
+    return;
+  }
   switch (type) {
     case "animal":   // round body with two ears and a tail
       root.append(
