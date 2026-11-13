@@ -6,14 +6,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>微小星火</title>
 <link rel="icon" href="data:,">
-<link rel="stylesheet" href="css/base.css?v=a5b72daa">
+<link rel="stylesheet" href="css/base.css?v=d7265520">
 </head>
 <body>
 <h1 class="sr-only">微小星火</h1>
 <main><div class="card">載入中…</div></main>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script type="module">
-import { hasSavedSession } from "./js/session.js?v=a5b72daa";
+import { hasSavedSession } from "./js/session.js?v=d7265520";
 location.replace((await hasSavedSession()) ? "map.html" : "login.html");
 </script>
 </body>

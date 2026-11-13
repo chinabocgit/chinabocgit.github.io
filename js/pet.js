@@ -33,25 +33,30 @@ function face(root, ex, ey, smileY) {
 // Draws the body for a pet type. Each type has its own silhouette.
 function body(root, petId, type) {
   const c = BODY[petId] || "#c9b28a";
-  if (petId === "sparky") {   // 小火花：精靈版（半透明的火焰身體，金黃核心，頭頂火苗，周圍閃光）
-    root.append(
-      // 半透明的外焰
-      svg("path", { id: "flame", d: "M60 14 C70 34 94 48 94 78 C94 100 80 108 60 108 C40 108 26 100 26 78 C26 60 40 48 50 34 C52 46 54 52 58 56 C58 42 58 28 60 14 Z", fill: "#ff7a2a", "fill-opacity": 0.82 }),
-      // 頭頂的小火苗
-      svg("path", { d: "M44 40 C40 32 46 26 44 18 C52 26 52 34 50 40 Z", fill: "#ff9a4a", "fill-opacity": 0.8 }),
-      svg("path", { d: "M76 40 C80 32 74 26 76 18 C68 26 68 34 70 40 Z", fill: "#ff9a4a", "fill-opacity": 0.8 }),
-      // 金黃色核心
-      svg("path", { d: "M60 50 C68 62 74 70 74 82 C74 94 66 98 60 98 C54 98 46 94 46 82 C46 70 52 62 60 50 Z", fill: "#ffd23f" }),
-      svg("path", { d: "M60 66 C63 72 65 76 65 82 C65 88 62 90 60 90 C58 90 55 88 55 82 C55 76 57 72 60 66 Z", fill: "#fff3b0" }));
-    // 靈動的眼睛（有高光）
-    root.append(
-      svg("circle", { cx: 52, cy: 82, r: 4.5, fill: "#333" }), svg("circle", { cx: 68, cy: 82, r: 4.5, fill: "#333" }),
-      svg("circle", { cx: 53.5, cy: 80.5, r: 1.4, fill: "#fff" }), svg("circle", { cx: 69.5, cy: 80.5, r: 1.4, fill: "#fff" }),
-      svg("path", { d: "M54 94 q6 5 12 0", stroke: "#333", "stroke-width": 2.5, fill: "none", "stroke-linecap": "round" }));
-    // 周圍的細小閃光
-    for (const [x, y, r] of [[18, 36, 4], [102, 52, 3.5], [16, 92, 3], [104, 96, 3.5], [60, 6, 2.5]]) {
-      root.append(svg("path", { d: `M${x} ${y - r} L${x + r * 0.35} ${y - r * 0.35} L${x + r} ${y} L${x + r * 0.35} ${y + r * 0.35} L${x} ${y + r} L${x - r * 0.35} ${y + r * 0.35} L${x - r} ${y} L${x - r * 0.35} ${y - r * 0.35} Z`, fill: "#fff3b0" }));
-    }
+  if (petId === "sparky") {   // 小火花：依 icon/小火花.png 的特徵（圓滾的小火焰寶寶、頭頂火苗、大眼睛、小手小腳），以 SVG 重新繪製
+    const defs = svg("defs", {});
+    defs.append(svg("linearGradient", { id: "sparkyBody", x1: 0, y1: 0, x2: 0, y2: 1 }));
+    const g = defs.firstChild;
+    g.append(svg("stop", { offset: "0", "stop-color": "#ffd34d" }), svg("stop", { offset: "1", "stop-color": "#ff9a2a" }));
+    root.append(defs,
+      // 小腳
+      svg("ellipse", { cx: 46, cy: 106, rx: 10, ry: 6, fill: "#ff9a2a" }), svg("ellipse", { cx: 74, cy: 106, rx: 10, ry: 6, fill: "#ff9a2a" }),
+      // 圓滾的身體（漸層）
+      svg("ellipse", { cx: 60, cy: 76, rx: 35, ry: 30, fill: "url(#sparkyBody)" }),
+      // 小手
+      svg("ellipse", { cx: 26, cy: 84, rx: 7, ry: 11, fill: "#ffb84d", transform: "rotate(25 26 84)" }),
+      svg("ellipse", { cx: 94, cy: 84, rx: 7, ry: 11, fill: "#ffb84d", transform: "rotate(-25 94 84)" }),
+      // 頭頂的火苗（會搖曳，這裡畫成靜態的三片火舌）
+      svg("path", { id: "flame", d: "M60 12 C68 24 74 30 72 42 C68 38 64 38 62 46 C58 38 52 34 50 42 C46 30 52 22 60 12 Z", fill: "#ff8a2a" }),
+      svg("path", { d: "M60 28 C64 34 66 38 65 44 C62 42 60 42 59 46 C56 40 56 36 60 28 Z", fill: "#ffd34d" }),
+      // 臉頰
+      svg("circle", { cx: 40, cy: 82, r: 4.5, fill: "#ff7a7a", "fill-opacity": 0.45 }),
+      svg("circle", { cx: 80, cy: 82, r: 4.5, fill: "#ff7a7a", "fill-opacity": 0.45 }),
+      // 大眼睛（有高光）
+      svg("circle", { cx: 48, cy: 72, r: 6.5, fill: "#2b2b2b" }), svg("circle", { cx: 72, cy: 72, r: 6.5, fill: "#2b2b2b" }),
+      svg("circle", { cx: 50, cy: 70, r: 2.2, fill: "#fff" }), svg("circle", { cx: 74, cy: 70, r: 2.2, fill: "#fff" }),
+      // 微笑
+      svg("path", { d: "M54 84 q6 5 12 0", stroke: "#2b2b2b", "stroke-width": 2.5, fill: "none", "stroke-linecap": "round" }));
     return;
   }
   switch (type) {

@@ -1,6 +1,6 @@
 // Shared pieces for the admin pages: the sign-in and admin-role check, the page output helpers, and the navigation bar.
-import { el } from "../../js/dom.js?v=a5b72daa";
-import { sb, select } from "../../teacher/js/tapi.js?v=a5b72daa";
+import { el } from "../../js/dom.js?v=d7265520";
+import { sb, select } from "../../teacher/js/tapi.js?v=d7265520";
 
 export const app = document.getElementById("app");
 export const put = (...kids) => app.replaceChildren(...kids.flat().filter(Boolean));
