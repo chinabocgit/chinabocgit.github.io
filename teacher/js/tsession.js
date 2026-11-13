@@ -1,5 +1,5 @@
 // Teacher session: email + password sign-in (Supabase Auth). Sessions refresh automatically; sign out is manual.
-import { sb, setSessionInvalidHandler } from "./tapi.js?v=c9b988ea";
+import { sb, setSessionInvalidHandler, isAdmin } from "./tapi.js?v=1404c8c6";
 
 export const goLogin = () => location.replace("index.html");
 
@@ -11,6 +11,7 @@ export async function signIn(email, password) {
 }
 
 export async function signOut() {
+  sessionStorage.removeItem(ADMIN_CACHE);
   try { await sb.auth.signOut({ scope: "local" }); } catch { /* ignore */ }
   goLogin();
 }
@@ -54,20 +55,27 @@ export async function requireTeacher() {
 
 // Administrators see a link to the admin pages in the header and the label "老師・管理者". Everyone else sees nothing new.
 // The admin pages check the role again, so this link is only a shortcut.
+const ADMIN_CACHE = "lg-admin-shortcut";    // "<user id>:1" or ":0"; kept per tab so ordinary pages do not ask the server every time
+async function adminShortcutAllowed(uid) {
+  const c = sessionStorage.getItem(ADMIN_CACHE);
+  if (c && c.startsWith(uid + ":")) return c.endsWith(":1");
+  const ok = await isAdmin(uid);
+  sessionStorage.setItem(ADMIN_CACHE, uid + ":" + (ok ? "1" : "0"));
+  return ok;
+}
+
 async function addAdminLink(uid) {
   try {
-    const { data } = await sb.from("user_roles").select("role").eq("user_id", uid).eq("role", "admin");
-    if (!data || !data.length) return;
+    if (!(await adminShortcutAllowed(uid))) return;
     const header = document.querySelector("header.top");
     if (!header || document.getElementById("admin-link")) return;
-    // Only the role label of the teacher pages is changed: never #who, and never the "家長" label of the parent pages.
-    const label = [...header.querySelectorAll("span.muted")].find(e => e.id !== "who" && e.textContent === "老師");
+    const label = document.getElementById("role-label");     // only pages that mark their role label are changed
     if (label) label.textContent = "老師・管理者";
     const a = document.createElement("a");
     a.id = "admin-link";
+    a.className = "adminlink";
     a.href = "../admin/";
     a.textContent = "管理者頁面";
-    a.style.cssText = "padding:6px 12px;border:2px solid var(--brand);border-radius:10px;color:var(--brand);text-decoration:none;font-weight:700;";
     header.insertBefore(a, document.getElementById("logout") || null);
   } catch (e) { console.warn("admin shortcut not shown:", e); }   // optional feature: report, do not break the page
 }

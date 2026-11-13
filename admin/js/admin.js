@@ -1,9 +1,9 @@
 // Admin page: platform name, sponsor link, announcements. Only users with the admin role see the forms (the database enforces it too).
-import { el } from "../../js/dom.js?v=c9b988ea";
-import { sb, rpc, select, ApiError } from "../../teacher/js/tapi.js?v=c9b988ea";
-import { signOut } from "../../teacher/js/tsession.js?v=c9b988ea";
-import { validateSetting, validateAnnouncement, audienceText, AUDIENCES } from "./adminCheck.js?v=c9b988ea";
-import { navBar } from "./common.js?v=c9b988ea";
+import { el } from "../../js/dom.js?v=1404c8c6";
+import { sb, rpc, select, ApiError } from "../../teacher/js/tapi.js?v=1404c8c6";
+import { signOut } from "../../teacher/js/tsession.js?v=1404c8c6";
+import { validateSetting, validateAnnouncement, audienceText, AUDIENCES } from "./adminCheck.js?v=1404c8c6";
+import { navBar, gate } from "./common.js?v=1404c8c6";
 
 const app = document.getElementById("app");
 const put = (...kids) => app.replaceChildren(...kids.flat().filter(Boolean));
@@ -11,15 +11,6 @@ const note = (cls, text) => el("div", { class: "msg " + cls, role: "status" }, t
 document.getElementById("logout").addEventListener("click", signOut);
 
 let flash = null;
-
-async function gate() {
-  const { data } = await sb.auth.getSession();
-  if (!data.session) { location.replace("../teacher/index.html"); return null; }
-  const me = data.session.user.id;
-  const roles = await select(sb.from("user_roles").select("role").eq("user_id", me).eq("role", "admin"));
-  if (!roles.length) { put(el("div", { class: "card" }, "只有管理者可以使用這個頁面。")); return null; }
-  return me;
-}
 
 async function loadAll(me) {
   const [settings, anns] = await Promise.all([

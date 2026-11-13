@@ -1,9 +1,9 @@
 // "This question has a problem" report. Anyone signed in (a child or an adult) can report a question.
 // It only records the report; an administrator checks the question and the answer later.
-import { rpc } from "./api.js?v=c9b988ea";
-import { validateReport } from "./report-check.js?v=c9b988ea";
+import { rpc } from "./api.js?v=1404c8c6";
+import { validateReport } from "./report-check.js?v=1404c8c6";
 
-export { validateReport, REPORT_MAX } from "./report-check.js?v=c9b988ea";
+export { validateReport, REPORT_MAX } from "./report-check.js?v=1404c8c6";
 
 // Sends the report. questionCode is the question's code from the question pool. Throws ApiError on failure.
 export async function sendReport(questionCode, text) {

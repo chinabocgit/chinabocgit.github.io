@@ -1,6 +1,6 @@
 // Teacher client: separate storage key from the child app, so both can be open in one browser.
 // Server messages already read like "code: Chinese text"; we keep the code and show the Chinese text.
-import { SB_URL, SB_KEY } from "../../js/config.js?v=c9b988ea";
+import { SB_URL, SB_KEY } from "../../js/config.js?v=1404c8c6";
 
 export const sb = window.supabase.createClient(SB_URL, SB_KEY, {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: "lg-teacher" },
@@ -36,4 +36,10 @@ export async function select(query) {
   const { data, error } = await query;
   if (error) throw toApiError(error);
   return data;
+}
+
+// True when the user has the admin role. The only place that decides this: the header shortcut and the admin pages both call it.
+export async function isAdmin(uid) {
+  const rows = await select(sb.from("user_roles").select("role").eq("user_id", uid).eq("role", "admin"));
+  return rows.length > 0;
 }
