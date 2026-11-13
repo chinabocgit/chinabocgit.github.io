@@ -1,5 +1,5 @@
 // Teacher session: email + password sign-in (Supabase Auth). Sessions refresh automatically; sign out is manual.
-import { sb, setSessionInvalidHandler } from "./tapi.js?v=6c9c2d82";
+import { sb, setSessionInvalidHandler } from "./tapi.js?v=c9b988ea";
 
 export const goLogin = () => location.replace("index.html");
 
@@ -48,7 +48,7 @@ export async function requireTeacher() {
     name = (p && p.display_name) || "";
   } catch { /* the name is optional */ }
   startIdleWatch();
-  await addAdminLink(u.id);
+  addAdminLink(u.id);          // not awaited: the shortcut must never hold up the page
   return { id: u.id, email: u.email, name };
 }
 
@@ -60,7 +60,8 @@ async function addAdminLink(uid) {
     if (!data || !data.length) return;
     const header = document.querySelector("header.top");
     if (!header || document.getElementById("admin-link")) return;
-    const label = header.querySelector(".muted");
+    // Only the role label of the teacher pages is changed: never #who, and never the "家長" label of the parent pages.
+    const label = [...header.querySelectorAll("span.muted")].find(e => e.id !== "who" && e.textContent === "老師");
     if (label) label.textContent = "老師・管理者";
     const a = document.createElement("a");
     a.id = "admin-link";
@@ -68,5 +69,5 @@ async function addAdminLink(uid) {
     a.textContent = "管理者頁面";
     a.style.cssText = "padding:6px 12px;border:2px solid var(--brand);border-radius:10px;color:var(--brand);text-decoration:none;font-weight:700;";
     header.insertBefore(a, document.getElementById("logout") || null);
-  } catch { /* the shortcut is optional */ }
+  } catch (e) { console.warn("admin shortcut not shown:", e); }   // optional feature: report, do not break the page
 }

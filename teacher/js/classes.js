@@ -1,7 +1,7 @@
 // My classes: every class where I am a teacher (homeroom or subject teacher), plus "create a class".
-import { el } from "../../js/dom.js?v=6c9c2d82";
-import { sb, rpc, select, ApiError } from "./tapi.js?v=6c9c2d82";
-import { requireTeacher, signOut } from "./tsession.js?v=6c9c2d82";
+import { el } from "../../js/dom.js?v=c9b988ea";
+import { sb, rpc, select, ApiError } from "./tapi.js?v=c9b988ea";
+import { requireTeacher, signOut } from "./tsession.js?v=c9b988ea";
 
 const app = document.getElementById("app");
 const me = await requireTeacher();
