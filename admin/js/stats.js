@@ -1,8 +1,8 @@
 // Usage statistics: daily activity, practice by subject, and the questions children find hardest. Only totals; no names.
-import { el } from "../../js/dom.js?v=6efbd73f";
-import { rpc, ApiError } from "../../teacher/js/tapi.js?v=6efbd73f";
-import { signOut } from "../../teacher/js/tsession.js?v=6efbd73f";
-import { put, note, gate, navBar } from "./common.js?v=6efbd73f";
+import { el } from "../../js/dom.js?v=86bf2cc1";
+import { rpc, ApiError } from "../../teacher/js/tapi.js?v=86bf2cc1";
+import { signOut } from "../../teacher/js/tsession.js?v=86bf2cc1";
+import { put, note, gate, navBar } from "./common.js?v=86bf2cc1";
 
 document.getElementById("logout").addEventListener("click", signOut);
 

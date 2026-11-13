@@ -1,10 +1,10 @@
 // Map home: subject tabs, units as blocks, levels as lamps, rewards summary, open-assignment banner.
-import { el } from "./dom.js?v=6efbd73f";
-import { ApiError } from "./api.js?v=6efbd73f";
-import { requireStudent, onTick, logout } from "./session.js?v=6efbd73f";
-import { loadMapData, buildMap, recommendNext } from "./data.js?v=6efbd73f";
-import { applyTheme } from "./theme.js?v=6efbd73f";
-import { renderMap } from "./mapview.js?v=6efbd73f";
+import { el } from "./dom.js?v=86bf2cc1";
+import { ApiError } from "./api.js?v=86bf2cc1";
+import { requireStudent, onTick, logout } from "./session.js?v=86bf2cc1";
+import { loadMapData, buildMap, recommendNext } from "./data.js?v=86bf2cc1";
+import { applyTheme } from "./theme.js?v=86bf2cc1";
+import { renderMap } from "./mapview.js?v=86bf2cc1";
 
 const app = document.getElementById("app");
 const me = await requireStudent();

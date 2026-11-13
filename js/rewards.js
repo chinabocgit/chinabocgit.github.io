@@ -1,11 +1,11 @@
 // "My collection": stars, chests, pets and equipment, certificates. Every change goes through a server function;
 // the page only shows what the server says (balance, ownership, results of opening a chest).
-import { el } from "./dom.js?v=6efbd73f";
-import { rpc, ApiError } from "./api.js?v=6efbd73f";
-import { requireStudent } from "./session.js?v=6efbd73f";
-import { applyTheme } from "./theme.js?v=6efbd73f";
-import { petSvg, EQUIP_EMOJI, SLOT_LABEL } from "./pet.js?v=6efbd73f";
-import { isMuted, setMuted, playChestShake, playChestOpen, playFanfare } from "./sound.js?v=6efbd73f";
+import { el } from "./dom.js?v=86bf2cc1";
+import { rpc, ApiError } from "./api.js?v=86bf2cc1";
+import { requireStudent } from "./session.js?v=86bf2cc1";
+import { applyTheme } from "./theme.js?v=86bf2cc1";
+import { petSvg, EQUIP_EMOJI, SLOT_LABEL, PET_TYPE, TYPE_LABEL } from "./pet.js?v=86bf2cc1";
+import { isMuted, setMuted, playChestShake, playChestOpen, playFanfare } from "./sound.js?v=86bf2cc1";
 
 const app = document.getElementById("app");
 const me = await requireStudent();
@@ -113,13 +113,13 @@ function petCard() {
     kids.push(slotArea(cur));
   }
   if (owned.length) kids.push(el("div", { class: "pet-list" }, owned.map(p =>
-    el("div", { class: "pet-card", "data-active": String(p.id === viewPet) }, petSvg(p.id, p.outfit, 70), el("b", null, p.name),
+    el("div", { class: "pet-card", "data-active": String(p.id === viewPet) }, petSvg(p.id, p.outfit, 70), el("b", null, p.name), el("span", { class: "muted" }, TYPE_LABEL[PET_TYPE[p.id]] || ""),
       el("button", { class: "ghost", onclick: () => { viewPet = p.id; render(); } }, "看看牠"),
       S.pets.active_pet_id === p.id ? el("span", { class: "muted" }, "✔ 帶著") :
         el("button", { disabled: busy, onclick: () => act(() => rpc("rpc_set_active_pet", { p_pet_id: p.id }), p.name + " 跟你一起闖關！") }, "帶著闖關")))));
   if (unowned.length) kids.push(el("div", null, el("h3", null, "領養新夥伴"),
     el("div", { class: "pet-list" }, unowned.map(p =>
-      el("div", { class: "pet-card" }, petSvg(p.id, {}, 70), el("b", null, p.name), el("span", { class: "muted" }, p.description || ""),
+      el("div", { class: "pet-card" }, petSvg(p.id, {}, 70), el("b", null, p.name), el("span", { class: "muted" }, (TYPE_LABEL[PET_TYPE[p.id]] || "") + "・" + (p.description || "")),
         el("button", { disabled: busy || (p.unlock_stars > S.pets.stars),
           onclick: () => act(() => rpc("rpc_unlock_pet", { p_pet_id: p.id }), "歡迎 " + p.name + "！") },
           p.unlock_stars ? "⭐ " + p.unlock_stars + " 領養" : "免費領養"))))));

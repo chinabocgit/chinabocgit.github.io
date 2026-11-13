@@ -1,6 +1,6 @@
 // Teacher client: separate storage key from the child app, so both can be open in one browser.
 // Server messages already read like "code: Chinese text"; we keep the code and show the Chinese text.
-import { SB_URL, SB_KEY } from "../../js/config.js?v=6efbd73f";
+import { SB_URL, SB_KEY } from "../../js/config.js?v=86bf2cc1";
 
 export const sb = window.supabase.createClient(SB_URL, SB_KEY, {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey: "lg-teacher" },
