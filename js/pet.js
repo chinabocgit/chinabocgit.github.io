@@ -1,7 +1,7 @@
 // Self-drawn pet (SVG) with equipment shown as emoji around it. No external images.
 // The shape of the pet depends on its type (可愛型／動物型／人偶型／文具型／文書型). Types must match _supabase/2E/031.
 const NS = "http://www.w3.org/2000/svg";
-const BODY = { sparky: "#ff7a2a", glow: "#7fd6a0", rail: "#7aa7e8", letter: "#f5e6b8", pencil: "#f2c94c" };
+const BODY = { sparky: "#ff7a2a", glow: "#7fd6a0", rail: "#7aa7e8", letter: "#f0cf7a", pencil: "#f2c94c" };
 
 export const PET_TYPE = { sparky: "cute", glow: "animal", rail: "doll", letter: "document", pencil: "stationery" };
 export const TYPE_LABEL = { cute: "可愛型", animal: "動物型", doll: "人偶型", stationery: "文具型", document: "文書型" };
@@ -14,6 +14,8 @@ export const EQUIP_EMOJI = {
 };
 // Where each slot is drawn (x, y) inside the 120x120 box.
 const SLOT_POS = { head: [60, 22], neck: [60, 92], back: [100, 66], hand: [18, 78] };
+// The doll type is drawn with a small head and body, so its head and neck slots sit higher than for the round types.
+const SLOT_POS_BY_TYPE = { doll: { head: [60, 14], neck: [60, 62] } };
 
 function svg(tag, attrs, text) {
   const e = document.createElementNS(NS, tag);
@@ -103,7 +105,7 @@ export function petSvg(petId, outfit = {}, size = 140) {
   root.append(svg("ellipse", { cx: 60, cy: 108, rx: 30, ry: 6, fill: "#0002" }));
   body(root, petId, PET_TYPE[petId] || "cute");
   for (const [slot, equipId] of Object.entries(outfit)) {
-    const pos = SLOT_POS[slot];
+    const pos = (SLOT_POS_BY_TYPE[PET_TYPE[petId]] || {})[slot] || SLOT_POS[slot];
     if (!pos || !EQUIP_EMOJI[equipId]) continue;
     root.append(svg("text", { x: pos[0], y: pos[1], "font-size": 26, "text-anchor": "middle", "dominant-baseline": "central" }, EQUIP_EMOJI[equipId]));
   }

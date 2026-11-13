@@ -1,7 +1,7 @@
 // Certificate page: shows one unit certificate and prints on A4 landscape. All text is set with textContent (no HTML).
-import { el } from "./dom.js?v=1404c8c6";
-import { rpc, ApiError } from "./api.js?v=1404c8c6";
-import { requireStudent } from "./session.js?v=1404c8c6";
+import { el } from "./dom.js?v=df105d9d";
+import { rpc, ApiError } from "./api.js?v=df105d9d";
+import { requireStudent } from "./session.js?v=df105d9d";
 
 const app = document.getElementById("app");
 const me = await requireStudent();
