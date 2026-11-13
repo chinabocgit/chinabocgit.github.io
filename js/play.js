@@ -2,15 +2,15 @@
 //  - Practice: instant client-side feedback; every answer is re-graded by the server when the run is sent at the end.
 //  - Assignment: the server grades each answer (the page never receives answers before submitting).
 // Both paths save answers locally first (queue.js), so a dropped connection never loses work.
-import { el } from "./dom.js?v=a1f40c48";
-import { sb, rpc, ApiError } from "./api.js?v=a1f40c48";
-import { requireStudent } from "./session.js?v=a1f40c48";
-import { select, loadMapData, buildMap, recommendNext } from "./data.js?v=a1f40c48";
-import { gradeAnswer, describeAnswer } from "./grade.js?v=a1f40c48";
-import { enqueue, flush, pendingCodes } from "./queue.js?v=a1f40c48";
-import { renderQuestion, focusQuestion } from "./qview.js?v=a1f40c48";
-import { setSafeHtml } from "./sanitize.js?v=a1f40c48";
-import { playCorrect, playWrong, playStar, playFanfare } from "./sound.js?v=a1f40c48";
+import { el } from "./dom.js?v=858b6233";
+import { sb, rpc, ApiError } from "./api.js?v=858b6233";
+import { requireStudent } from "./session.js?v=858b6233";
+import { select, loadMapData, buildMap, recommendNext } from "./data.js?v=858b6233";
+import { gradeAnswer, describeAnswer } from "./grade.js?v=858b6233";
+import { enqueue, flush, pendingCodes } from "./queue.js?v=858b6233";
+import { renderQuestion, focusQuestion } from "./qview.js?v=858b6233";
+import { setSafeHtml } from "./sanitize.js?v=858b6233";
+import { playCorrect, playWrong, playStar, playFanfare } from "./sound.js?v=858b6233";
 
 const params = new URLSearchParams(location.search);
 const levelId = params.get("level");

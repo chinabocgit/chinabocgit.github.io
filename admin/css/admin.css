@@ -1,0 +1,5 @@
+nav.adminnav { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 14px; }
+nav.adminnav a { padding: 8px 14px; border: 2px solid var(--brand); border-radius: 12px; color: var(--brand); text-decoration: none; font-weight: 700; }
+nav.adminnav a.on { background: var(--brand); color: var(--brand-ink); }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }

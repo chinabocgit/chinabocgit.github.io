@@ -1,7 +1,7 @@
 // Parent sign-in. Adult accounts share one Supabase Auth session (same storage key as the teacher pages),
 // so a person who is both a teacher and a parent signs in once.
-import { el } from "../../js/dom.js?v=a1f40c48";
-import { signIn, hasSession, takeLoginNote } from "../../teacher/js/tsession.js?v=a1f40c48";
+import { el } from "../../js/dom.js?v=858b6233";
+import { signIn, hasSession, takeLoginNote } from "../../teacher/js/tsession.js?v=858b6233";
 
 const app = document.getElementById("app");
 let busy = false, msg = takeLoginNote() === "idle" ? { cls: "warn", text: "你超過 1 小時沒有操作，為了安全已自動登出，請重新登入。" } : null;

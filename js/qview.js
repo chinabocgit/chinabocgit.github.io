@@ -1,9 +1,9 @@
 // Renders one question: data card, stem, answer controls (choice / tf / fill / order), 3-level hints, feedback.
 // All database-provided text goes through setSafeHtml; the only plain-text inputs are the child's own typing.
-import { el } from "./dom.js?v=a1f40c48";
-import { setSafeHtml } from "./sanitize.js?v=a1f40c48";
-import { renderFigure } from "./figure.js?v=a1f40c48";
-import { validateSpeak, speak } from "./speak.js?v=a1f40c48";
+import { el } from "./dom.js?v=858b6233";
+import { setSafeHtml } from "./sanitize.js?v=858b6233";
+import { renderFigure } from "./figure.js?v=858b6233";
+import { validateSpeak, speak } from "./speak.js?v=858b6233";
 
 // A "listen" button for questions whose payload has speak text. Returns null when there is nothing valid to read.
 function speakRow(payload) {

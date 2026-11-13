@@ -1,8 +1,9 @@
 // Admin page: platform name, sponsor link, announcements. Only users with the admin role see the forms (the database enforces it too).
-import { el } from "../../js/dom.js?v=a1f40c48";
-import { sb, rpc, select, ApiError } from "../../teacher/js/tapi.js?v=a1f40c48";
-import { signOut } from "../../teacher/js/tsession.js?v=a1f40c48";
-import { validateSetting, validateAnnouncement, audienceText, AUDIENCES } from "./adminCheck.js?v=a1f40c48";
+import { el } from "../../js/dom.js?v=858b6233";
+import { sb, rpc, select, ApiError } from "../../teacher/js/tapi.js?v=858b6233";
+import { signOut } from "../../teacher/js/tsession.js?v=858b6233";
+import { validateSetting, validateAnnouncement, audienceText, AUDIENCES } from "./adminCheck.js?v=858b6233";
+import { navBar } from "./common.js?v=858b6233";
 
 const app = document.getElementById("app");
 const put = (...kids) => app.replaceChildren(...kids.flat().filter(Boolean));
@@ -91,10 +92,10 @@ async function main() {
   const reload = async () => {
     try {
       const S = await loadAll(me);
-      put(flash, settingForm(S, reload), announcementForm(reload, me), announcementList(S.anns, reload));
+      put(navBar("index.html"), flash, settingForm(S, reload), announcementForm(reload, me), announcementList(S.anns, reload));
       flash = null;
     } catch (e) {
-      put(note("err", e instanceof ApiError ? e.friendly : "讀取失敗，請稍後再試。"));
+      put(navBar("index.html"), note("err", e instanceof ApiError ? e.friendly : "讀取失敗，請稍後再試。"));
     }
   };
   reload();

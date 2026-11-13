@@ -36,3 +36,15 @@ export function validateAnnouncement(input, now = new Date()) {
   }
   return { ok: true, value: { title, body, audience: input.audience, endAt } };
 }
+
+// Rejecting a teacher application needs a reason of 1 to 200 characters (same rule as the database).
+export function validateReject(reason) {
+  const n = Array.from(String(reason || "").trim()).length;
+  return n >= 1 && n <= 200 ? { ok: true } : { ok: false, text: "退回請寫原因（1 到 200 個字）。" };
+}
+
+// Optional note when resolving a report: up to 300 characters.
+export function validateReportNote(note) {
+  const t = String(note || "").trim();
+  return Array.from(t).length <= 300 ? { ok: true, value: t } : { ok: false, text: "備註最多 300 個字。" };
+}
