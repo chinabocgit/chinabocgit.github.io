@@ -12,3 +12,4 @@ export const REVOKE_POLL_MS = 2 * 60 * 1000;
 // Picture password: picture no. 01..12, four pictures in order.
 export const PICS = ["🐱", "🐶", "🐸", "🌟", "🍎", "🚗", "🎈", "🌈", "🐟", "🌻", "⚽", "🎵"];
 export const PIC_LEN = 4;
+

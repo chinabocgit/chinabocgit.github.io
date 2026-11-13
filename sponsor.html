@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>支持我們｜微小星火</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="css/base.css?v=a1f40c48">
+<link rel="stylesheet" href="css/play.css?v=a1f40c48">
+</head>
+<body>
+<header class="top"><a class="back" href="map.html">← 回地圖</a><span class="sp"></span></header>
+<h1 class="sr-only">支持微小星火</h1>
+<main>
+  <section class="card">
+    <h2>支持微小星火</h2>
+    <p>微小星火是免費的課業複習遊戲，所有孩子都可以免費使用。</p>
+    <p>如果你覺得它對孩子有幫助，歡迎用贊助的方式支持我們持續更新題庫與功能。贊助是自願的，不贊助也完全不影響使用。</p>
+    <p class="muted">贊助的金額會用來支付網站與資料庫的費用，以及題目的整理與更新。</p>
+    <p id="status" class="muted"></p>
+    <p><a id="donate" class="btn" href="#" rel="noopener" target="_blank" hidden>我要贊助</a></p>
+  </section>
+  <section class="card">
+    <h2>感謝你</h2>
+    <p>感謝每一位家長、老師與朋友的支持。</p>
+    <p class="muted">如果有任何問題或建議，歡迎透過平台的意見回饋告訴我們。</p>
+  </section>
+</main>
+<script type="module">
+import { SB_URL, SB_KEY } from "./js/config.js?v=a1f40c48";
+const a = document.getElementById("donate");
+const status = document.getElementById("status");
+// Public settings only (platform name and sponsor link), read without signing in.
+// The link is used only when it is a plain https:// address; anything else means "not open yet".
+async function loadSettings() {
+  const r = await fetch(SB_URL + "/rest/v1/rpc/rpc_public_settings", {
+    method: "POST", headers: { apikey: SB_KEY, "Content-Type": "application/json" }, body: "{}",
+  });
+  if (!r.ok) throw new Error("settings");
+  return r.json();
+}
+try {
+  const st = await loadSettings();
+  const url = typeof st.sponsor_url === "string" ? st.sponsor_url : "";
+  if (/^https:\/\/[^\s]+$/.test(url)) {
+    a.href = url;
+    a.hidden = false;
+  } else {
+    status.textContent = "贊助連結尚未開放，敬請期待。";
+  }
+} catch {
+  status.textContent = "暫時讀不到贊助資訊，請稍後再試。";
+}
+</script>
+</body>
+</html>
