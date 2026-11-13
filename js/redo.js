@@ -1,12 +1,12 @@
 // Fix wrong answers: re-practise the open wrong questions of one level. Instant client feedback (like practice);
 // the run is sent to the server as a normal practice, and the server marks a question "fixed" when it is answered correctly.
-import { el } from "./dom.js?v=df105d9d";
-import { rpc, ApiError } from "./api.js?v=df105d9d";
-import { requireStudent } from "./session.js?v=df105d9d";
-import { gradeAnswer, describeAnswer } from "./grade.js?v=df105d9d";
-import { enqueue, flush } from "./queue.js?v=df105d9d";
-import { renderQuestion, focusQuestion } from "./qview.js?v=df105d9d";
-import { playCorrect, playWrong } from "./sound.js?v=df105d9d";
+import { el } from "./dom.js?v=2ccc31aa";
+import { rpc, ApiError } from "./api.js?v=2ccc31aa";
+import { requireStudent } from "./session.js?v=2ccc31aa";
+import { gradeAnswer, describeAnswer } from "./grade.js?v=2ccc31aa";
+import { enqueue, flush } from "./queue.js?v=2ccc31aa";
+import { renderQuestion, focusQuestion } from "./qview.js?v=2ccc31aa";
+import { playCorrect, playWrong } from "./sound.js?v=2ccc31aa";
 
 const MAX_PER_RUN = 10;
 const app = document.getElementById("app");
