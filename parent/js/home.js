@@ -1,10 +1,10 @@
 // Parent home: agree to the trial notice, add children, and manage their picture passwords.
 // All writes go through existing server functions (rpc_register_parent, rpc_create_child,
 // rpc_reset_picture_password, rpc_unlock_student); this page only reads the parent's own family.
-import { el } from "../../js/dom.js?v=406474cb";
-import { PICS } from "../../js/config.js?v=406474cb";
-import { sb, rpc, select } from "../../teacher/js/tapi.js?v=406474cb";
-import { requireTeacher as requireSignedIn, signOut } from "../../teacher/js/tsession.js?v=406474cb";
+import { el } from "../../js/dom.js?v=de1fcbf8";
+import { PICS } from "../../js/config.js?v=de1fcbf8";
+import { sb, rpc, select } from "../../teacher/js/tapi.js?v=de1fcbf8";
+import { requireTeacher as requireSignedIn, signOut } from "../../teacher/js/tsession.js?v=de1fcbf8";
 
 const DOC_VERSION = "trial-2026-11";       // version of the notice shown below; stored with the consent
 const app = document.getElementById("app");

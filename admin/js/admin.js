@@ -1,9 +1,9 @@
 // Admin page: platform name, sponsor link, announcements. Only users with the admin role see the forms (the database enforces it too).
-import { el } from "../../js/dom.js?v=406474cb";
-import { sb, rpc, select, ApiError } from "../../teacher/js/tapi.js?v=406474cb";
-import { signOut } from "../../teacher/js/tsession.js?v=406474cb";
-import { validateSetting, validateAnnouncement, audienceText, AUDIENCES } from "./adminCheck.js?v=406474cb";
-import { navBar, gate } from "./common.js?v=406474cb";
+import { el } from "../../js/dom.js?v=de1fcbf8";
+import { sb, rpc, select, ApiError } from "../../teacher/js/tapi.js?v=de1fcbf8";
+import { signOut } from "../../teacher/js/tsession.js?v=de1fcbf8";
+import { validateSetting, validateAnnouncement, audienceText, AUDIENCES } from "./adminCheck.js?v=de1fcbf8";
+import { navBar, gate } from "./common.js?v=de1fcbf8";
 
 const app = document.getElementById("app");
 const put = (...kids) => app.replaceChildren(...kids.flat().filter(Boolean));
