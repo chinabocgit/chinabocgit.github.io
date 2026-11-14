@@ -2,15 +2,16 @@
 //  - Practice: instant client-side feedback; every answer is re-graded by the server when the run is sent at the end.
 //  - Assignment: the server grades each answer (the page never receives answers before submitting).
 // Both paths save answers locally first (queue.js), so a dropped connection never loses work.
-import { el } from "./dom.js?v=b4f364f3";
-import { sb, rpc, ApiError } from "./api.js?v=b4f364f3";
-import { requireStudent } from "./session.js?v=b4f364f3";
-import { select, loadMapData, buildMap, recommendNext } from "./data.js?v=b4f364f3";
-import { gradeAnswer, describeAnswer } from "./grade.js?v=b4f364f3";
-import { enqueue, flush, pendingCodes } from "./queue.js?v=b4f364f3";
-import { renderQuestion, focusQuestion } from "./qview.js?v=b4f364f3";
-import { setSafeHtml } from "./sanitize.js?v=b4f364f3";
-import { playCorrect, playWrong, playStar, playFanfare } from "./sound.js?v=b4f364f3";
+import { el } from "./dom.js?v=60d3e138";
+import { sb, rpc, ApiError } from "./api.js?v=60d3e138";
+import { requireStudent } from "./session.js?v=60d3e138";
+import { select, loadMapData, buildMap, recommendNext } from "./data.js?v=60d3e138";
+import { gradeAnswer, describeAnswer } from "./grade.js?v=60d3e138";
+import { enqueue, flush, pendingCodes } from "./queue.js?v=60d3e138";
+import { renderQuestion, focusQuestion } from "./qview.js?v=60d3e138";
+import { setSafeHtml } from "./sanitize.js?v=60d3e138";
+import { playCorrect, playWrong, playStar, playFanfare } from "./sound.js?v=60d3e138";
+import { shuffle, shufflePayload } from "./shuffle.js?v=60d3e138";
 
 const params = new URLSearchParams(location.search);
 const levelId = params.get("level");
@@ -20,7 +21,6 @@ const me = await requireStudent();
 const sid = me.student_id;
 document.getElementById("who").textContent = me.nickname;
 
-const shuffle = a => { const x = a.slice(); for (let i = x.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [x[i], x[j]] = [x[j], x[i]]; } return x; };
 const kind = levelId ? "level" : "assignment";
 const target = levelId || asgId;
 const runKey = "lg2-run-" + sid + "-" + kind + "-" + target;
@@ -98,12 +98,6 @@ async function startPractice() {
   nextPracticeQuestion(lv, run, byCode);
 }
 
-function shufflePayload(q) {
-  const p = JSON.parse(JSON.stringify(q.payload || {}));
-  if (q.qtype === "choice" && p.shuffle !== false && Array.isArray(p.options)) p.options = shuffle(p.options);
-  if (q.qtype === "order" && Array.isArray(p.items)) p.items = shuffle(p.items);
-  return p;
-}
 
 function nextPracticeQuestion(lv, run, byCode) {
   const idx = run.codes.findIndex(c => !run.answers[c]);

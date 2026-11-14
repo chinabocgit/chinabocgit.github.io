@@ -1,5 +1,5 @@
-import { el } from "../../js/dom.js?v=b4f364f3";
-import { signIn, hasSession, takeLoginNote } from "./tsession.js?v=b4f364f3";
+import { el } from "../../js/dom.js?v=60d3e138";
+import { signIn, hasSession, takeLoginNote } from "./tsession.js?v=60d3e138";
 
 const app = document.getElementById("app");
 let busy = false, msg = takeLoginNote() === "idle" ? { cls: "warn", text: "你超過 1 小時沒有操作，為了安全已自動登出，請重新登入。" } : null;

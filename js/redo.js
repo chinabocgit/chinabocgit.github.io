@@ -1,12 +1,13 @@
 // Fix wrong answers: re-practise the open wrong questions of one level. Instant client feedback (like practice);
 // the run is sent to the server as a normal practice, and the server marks a question "fixed" when it is answered correctly.
-import { el } from "./dom.js?v=b4f364f3";
-import { rpc, ApiError } from "./api.js?v=b4f364f3";
-import { requireStudent } from "./session.js?v=b4f364f3";
-import { gradeAnswer, describeAnswer } from "./grade.js?v=b4f364f3";
-import { enqueue, flush } from "./queue.js?v=b4f364f3";
-import { renderQuestion, focusQuestion } from "./qview.js?v=b4f364f3";
-import { playCorrect, playWrong } from "./sound.js?v=b4f364f3";
+import { el } from "./dom.js?v=60d3e138";
+import { rpc, ApiError } from "./api.js?v=60d3e138";
+import { requireStudent } from "./session.js?v=60d3e138";
+import { gradeAnswer, describeAnswer } from "./grade.js?v=60d3e138";
+import { enqueue, flush } from "./queue.js?v=60d3e138";
+import { renderQuestion, focusQuestion } from "./qview.js?v=60d3e138";
+import { playCorrect, playWrong } from "./sound.js?v=60d3e138";
+import { shuffle, shufflePayload } from "./shuffle.js?v=60d3e138";
 
 const MAX_PER_RUN = 10;
 const app = document.getElementById("app");
@@ -15,19 +16,12 @@ const sid = me.student_id;
 document.getElementById("who").textContent = me.nickname;
 const levelId = new URLSearchParams(location.search).get("level");
 const put = (parent, ...kids) => parent.replaceChildren(...kids.flat().filter(Boolean));
-const shuffle = a => { const x = a.slice(); for (let i = x.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [x[i], x[j]] = [x[j], x[i]]; } return x; };
 
 function message(cls, text, ...extra) {
   put(app, el("div", { class: "card empty" }, el("p", { class: "msg " + cls }, text), ...extra,
     el("div", { class: "row" }, el("a", { class: "btn", href: "wrongbook.html" }, "回錯題本"))));
 }
 
-function shufflePayload(q) {
-  const p = JSON.parse(JSON.stringify(q.payload || {}));
-  if (q.qtype === "choice" && p.shuffle !== false && Array.isArray(p.options)) p.options = shuffle(p.options);
-  if (q.qtype === "order" && Array.isArray(p.items)) p.items = shuffle(p.items);
-  return p;
-}
 
 let run = null;   // { attemptUuid, questions:[{...}], answers:{code:{...}}, wbBefore }
 
