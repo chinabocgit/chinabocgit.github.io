@@ -1,9 +1,9 @@
 // One attempt, question by question. The correct answer is shown only when the server says "reveal" (teachers always get it).
-import { el } from "../../js/dom.js?v=4337341a";
-import { setSafeHtml } from "../../js/sanitize.js?v=4337341a";
-import { describeAnswer, describeResponse } from "../../js/grade.js?v=4337341a";
-import { rpc, ApiError } from "./tapi.js?v=4337341a";
-import { requireTeacher, signOut } from "./tsession.js?v=4337341a";
+import { el } from "../../js/dom.js?v=a7adc987";
+import { setSafeHtml } from "../../js/sanitize.js?v=a7adc987";
+import { describeAnswer, describeResponse } from "../../js/grade.js?v=a7adc987";
+import { rpc, ApiError } from "./tapi.js?v=a7adc987";
+import { requireTeacher, signOut } from "./tsession.js?v=a7adc987";
 
 const app = document.getElementById("app");
 const me = await requireTeacher();

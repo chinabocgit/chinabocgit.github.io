@@ -1,6 +1,6 @@
 // Shared pieces for the admin pages: the sign-in and admin-role check, the page output helpers, and the navigation bar.
-import { el } from "../../js/dom.js?v=4337341a";
-import { sb, isAdmin } from "../../teacher/js/tapi.js?v=4337341a";
+import { el } from "../../js/dom.js?v=a7adc987";
+import { sb, isAdmin } from "../../teacher/js/tapi.js?v=a7adc987";
 
 export const app = document.getElementById("app");
 export const put = (...kids) => app.replaceChildren(...kids.flat().filter(Boolean));
@@ -15,7 +15,7 @@ export async function gate() {
   return me;
 }
 
-const PAGES = [["index.html", "平台設定與公告"], ["teachers.html", "老師申請"], ["reports.html", "題目回報"], ["stats.html", "使用統計"]];
+const PAGES = [["index.html", "平台設定與公告"], ["teachers.html", "老師申請"], ["reports.html", "題目回報"], ["stats.html", "使用統計"], ["themes.html", "主題設定"]];
 
 // Navigation bar shown at the top of every admin page; the current page is marked.
 export function navBar(current) {

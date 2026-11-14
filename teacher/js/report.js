@@ -1,11 +1,11 @@
 // Assignment report: who finished, score distribution, and per-question correct rate with the common wrong answers.
 // Exams add: correct rate per unit, questions worth a second look, time used, and a note on attempts settled after the time ran out.
 // Teachers see the correct answers (the database allows it); nothing here is shown to children.
-import { el } from "../../js/dom.js?v=4337341a";
-import { setSafeHtml } from "../../js/sanitize.js?v=4337341a";
-import { describeAnswer } from "../../js/grade.js?v=4337341a";
-import { rpc, ApiError } from "./tapi.js?v=4337341a";
-import { requireTeacher, signOut } from "./tsession.js?v=4337341a";
+import { el } from "../../js/dom.js?v=a7adc987";
+import { setSafeHtml } from "../../js/sanitize.js?v=a7adc987";
+import { describeAnswer } from "../../js/grade.js?v=a7adc987";
+import { rpc, ApiError } from "./tapi.js?v=a7adc987";
+import { requireTeacher, signOut } from "./tsession.js?v=a7adc987";
 
 const app = document.getElementById("app");
 const me = await requireTeacher();
