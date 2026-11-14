@@ -9,9 +9,33 @@ export const TYPE_LABEL = { cute: "可愛型", animal: "動物型", doll: "人�
 export const SLOT_LABEL = { head: "頭", neck: "脖子", back: "背", hand: "手" };
 export const EQUIP_EMOJI = {
   cap: "🧢", scarf: "🧣", bag: "🎒", wand: "🪄", glasses: "👓", bell: "🔔",
-  spark_crown: "👑", glow_wings: "🪽", rail_whistle: "📯", spark_cape: "✨",
+  spark_crown: "👑", glow_wings: "🦋", rail_whistle: "📯", spark_cape: "✨",
   bunny_ears: "🐰", hair_clip: "🎀", eraser_cap: "🧽", envelope_pin: "💌",
 };
+// Equipment that is drawn as shapes instead of an emoji: 🪽 is too new (Unicode 15) and many devices show nothing for it.
+const DRAWN = new Set(["glow_wings"]);
+// One pair of glowing wings. (cx, cy) is where the wings join the body; the left wing is drawn, the right one is its mirror.
+function wings(parent, cx, cy, k = 1) {
+  const g = svg("g", { transform: `translate(${cx} ${cy}) scale(${k})`, "aria-hidden": "true" });
+  const half = (flip) => {
+    const w = svg("g", flip ? { transform: "scale(-1 1)" } : {});
+    w.append(
+      svg("path", { d: "M-6 0 C-24 -4 -46 -20 -50 -42 C-32 -46 -10 -30 -4 -10 Z", fill: "#c8fbe6", "fill-opacity": 0.85, stroke: "#4fcf9a", "stroke-width": 2, "stroke-linejoin": "round" }),
+      svg("path", { d: "M-6 6 C-20 10 -38 8 -42 -4 C-28 -6 -12 -2 -4 2 Z", fill: "#e6fff4", "fill-opacity": 0.85, stroke: "#4fcf9a", "stroke-width": 2, "stroke-linejoin": "round" }),
+      svg("path", { d: "M-8 -4 C-24 -14 -36 -26 -42 -36", stroke: "#4fcf9a", "stroke-width": 1.2, fill: "none", "stroke-opacity": 0.7 }),
+      svg("circle", { cx: -36, cy: -30, r: 2.2, fill: "#fffbe0" }), svg("circle", { cx: -24, cy: -12, r: 1.8, fill: "#fffbe0" }));
+    return w;
+  };
+  g.append(half(false), half(true));
+  parent.append(g);
+}
+// An icon node (or a plain emoji string) for lists such as the shop and the chest: drawn equipment gets a small SVG.
+export function equipIcon(id) {
+  if (!DRAWN.has(id)) return EQUIP_EMOJI[id] || "🎀";
+  const root = svg("svg", { viewBox: "-60 -50 120 70", width: 44, height: 26, role: "img", "aria-label": "螢光翅膀" });
+  wings(root, 0, 0, 1);
+  return root;
+}
 // Where each slot is drawn (x, y) inside the 120x120 box.
 const SLOT_POS = { head: [60, 22], neck: [60, 92], back: [100, 66], hand: [18, 78] };
 // The doll type is drawn with a small head and body, so its head and neck slots sit higher than for the round types.
@@ -103,10 +127,12 @@ function body(root, petId, type) {
 export function petSvg(petId, outfit = {}, size = 140) {
   const root = svg("svg", { viewBox: "0 0 120 120", width: size, height: size, role: "img", "aria-label": "萌寵" });
   root.append(svg("ellipse", { cx: 60, cy: 108, rx: 30, ry: 6, fill: "#0002" }));
+  // Wings go behind the body so they look attached to the back.
+  if (Object.values(outfit).includes("glow_wings")) wings(root, 60, PET_TYPE[petId] === "doll" ? 66 : 62, 0.9);
   body(root, petId, PET_TYPE[petId] || "cute");
   for (const [slot, equipId] of Object.entries(outfit)) {
     const pos = (SLOT_POS_BY_TYPE[PET_TYPE[petId]] || {})[slot] || SLOT_POS[slot];
-    if (!pos || !EQUIP_EMOJI[equipId]) continue;
+    if (!pos || !EQUIP_EMOJI[equipId] || DRAWN.has(equipId)) continue;
     root.append(svg("text", { x: pos[0], y: pos[1], "font-size": 26, "text-anchor": "middle", "dominant-baseline": "central" }, EQUIP_EMOJI[equipId]));
   }
   return root;

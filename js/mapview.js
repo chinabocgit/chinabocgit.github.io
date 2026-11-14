@@ -1,7 +1,7 @@
 // Illustrated learning map (self-drawn SVG, no external images).
 // One scene per subject: units are districts, levels are stops along a winding road, the pet walks next to the current stop.
 // Themes only change palette and decoration; the logic (states, selection, keyboard) is shared.
-import { petSvg } from "./pet.js?v=60d3e138";
+import { petSvg } from "./pet.js?v=406474cb";
 
 const NS = "http://www.w3.org/2000/svg";
 const W = 360;

@@ -1,7 +1,7 @@
 // My records: assignment results and practice history. Details open on attempt.html (works on any device).
-import { el } from "./dom.js?v=60d3e138";
-import { rpc, ApiError } from "./api.js?v=60d3e138";
-import { requireStudent } from "./session.js?v=60d3e138";
+import { el } from "./dom.js?v=406474cb";
+import { rpc, ApiError } from "./api.js?v=406474cb";
+import { requireStudent } from "./session.js?v=406474cb";
 
 const app = document.getElementById("app");
 const me = await requireStudent();

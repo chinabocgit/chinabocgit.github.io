@@ -1,11 +1,11 @@
 // "My collection": stars, chests, pets and equipment, certificates. Every change goes through a server function;
 // the page only shows what the server says (balance, ownership, results of opening a chest).
-import { el } from "./dom.js?v=60d3e138";
-import { rpc, ApiError } from "./api.js?v=60d3e138";
-import { requireStudent } from "./session.js?v=60d3e138";
-import { applyTheme } from "./theme.js?v=60d3e138";
-import { petSvg, EQUIP_EMOJI, SLOT_LABEL, PET_TYPE, TYPE_LABEL } from "./pet.js?v=60d3e138";
-import { isMuted, setMuted, playChestShake, playChestOpen, playFanfare } from "./sound.js?v=60d3e138";
+import { el } from "./dom.js?v=406474cb";
+import { rpc, ApiError } from "./api.js?v=406474cb";
+import { requireStudent } from "./session.js?v=406474cb";
+import { applyTheme } from "./theme.js?v=406474cb";
+import { petSvg, equipIcon, SLOT_LABEL, PET_TYPE, TYPE_LABEL } from "./pet.js?v=406474cb";
+import { isMuted, setMuted, playChestShake, playChestOpen, playFanfare } from "./sound.js?v=406474cb";
 
 const app = document.getElementById("app");
 const me = await requireStudent();
@@ -75,9 +75,9 @@ function chestCard() {
 
 function revealBox(r) {
   const eq = r.kind === "equipment";
-  const emoji = eq ? (EQUIP_EMOJI[r.reward_id] || "🎀") : "⭐";
+  const icon = eq ? equipIcon(r.reward_id) : "⭐";
   return el("div", { class: "reveal pop", role: "status" },
-    el("div", { class: "big" }, emoji + " " + (eq && !r.converted ? "得到 " + equipName(r.reward_id) + "！" : eq ? "又拿到 " + equipName(r.reward_id) : "得到 " + r.amount + " 顆星星！")),
+    el("div", { class: "big" }, icon, " " + (eq && !r.converted ? "得到 " + equipName(r.reward_id) + "！" : eq ? "又拿到 " + equipName(r.reward_id) : "得到 " + r.amount + " 顆星星！")),
     r.converted ? el("p", null, "你已經有這件了，換成 " + r.amount + " 顆星星。") : null);
 }
 
@@ -132,7 +132,7 @@ function slotArea(pet) {
     const worn = pet.outfit[e.slot] === e.id;
     const wrong = e.pet_id && e.pet_id !== pet.id;
     return el("div", { class: "equip" },
-      el("span", { class: "em", "aria-hidden": "true" }, EQUIP_EMOJI[e.id] || "🎀"),
+      el("span", { class: "em", "aria-hidden": "true" }, equipIcon(e.id)),
       el("span", { class: "grow" }, el("b", null, e.name), el("div", { class: "muted" }, SLOT_LABEL[e.slot] + (e.pet_id ? "・" + petName(e.pet_id) + "專屬" : ""))),
       worn ? el("button", { class: "ghost", disabled: busy, onclick: () => act(() => rpc("rpc_unwear", { p_pet_id: pet.id, p_slot: e.slot }), "已脫下 " + e.name) }, "脫下")
            : el("button", { disabled: busy || wrong, title: wrong ? "這是別隻萌寵的專屬裝備" : "",
@@ -146,7 +146,7 @@ function shopCard() {
   return el("div", { class: "card" }, el("h2", null, "🛍️ 星星商店"),
     sale.length ? el("div", { class: "equip-list" }, sale.map(e =>
       el("div", { class: "equip" },
-        el("span", { class: "em", "aria-hidden": "true" }, EQUIP_EMOJI[e.id] || "🎀"),
+        el("span", { class: "em", "aria-hidden": "true" }, equipIcon(e.id)),
         el("span", { class: "grow" }, el("b", null, e.name), el("div", { class: "muted" }, SLOT_LABEL[e.slot] + (e.pet_id ? "・" + petName(e.pet_id) + "專屬" : ""))),
         el("button", { disabled: busy || e.star_price > S.pets.stars,
           onclick: () => act(() => rpc("rpc_exchange_equipment", { p_equipment_id: e.id }), "兌換了 " + e.name + "！") }, "⭐ " + e.star_price + " 兌換"))))
