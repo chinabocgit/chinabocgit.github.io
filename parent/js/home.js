@@ -1,10 +1,10 @@
 // Parent home: agree to the trial notice, add children, and manage their picture passwords.
 // All writes go through existing server functions (rpc_register_parent, rpc_create_child,
 // rpc_reset_picture_password, rpc_unlock_student); this page only reads the parent's own family.
-import { el } from "../../js/dom.js?v=cbc19fbd";
-import { PICS } from "../../js/config.js?v=cbc19fbd";
-import { sb, rpc, select } from "../../teacher/js/tapi.js?v=cbc19fbd";
-import { requireTeacher as requireSignedIn, signOut } from "../../teacher/js/tsession.js?v=cbc19fbd";
+import { el } from "../../js/dom.js?v=9d63c7c7";
+import { PICS } from "../../js/config.js?v=9d63c7c7";
+import { sb, rpc, select } from "../../teacher/js/tapi.js?v=9d63c7c7";
+import { requireTeacher as requireSignedIn, signOut } from "../../teacher/js/tsession.js?v=9d63c7c7";
 
 const DOC_VERSION = "trial-2026-11";       // version of the notice shown below; stored with the consent
 const app = document.getElementById("app");
@@ -16,6 +16,7 @@ const state = {
   ready: false,            // has the parent role and has agreed to the notice
   family: null,            // { id, family_code }
   kids: [],
+  exams: {},               // student id -> exam results (rpc_child_exams)
   reveal: null,            // one-time login details: { title, nickname, family_code, picture_password }
   confirmReset: null,      // student id waiting for a second click
   busy: false, msg: null, agree: false,
@@ -42,6 +43,11 @@ async function load() {
   ]);
   state.family = fam[0] || null;
   state.kids = kids;
+  // Exam scores are a nice-to-have: a failure here must not break the page.
+  state.exams = {};
+  await Promise.all(kids.map(async k => {
+    try { state.exams[k.id] = (await rpc("rpc_child_exams", { p_student_id: k.id })).exams || []; } catch { state.exams[k.id] = null; }
+  }));
 }
 
 async function run(fn) {
@@ -131,6 +137,22 @@ function kidsCard() {
       : el("p", { class: "muted" }, "還沒有孩子。請用下面的表單幫孩子開帳號。"));
 }
 
+// Exam results per child: score and how many questions were right in each unit (no answers are shown here).
+function examsCard() {
+  const withExams = state.kids.filter(k => (state.exams[k.id] || []).length);
+  if (!withExams.length) return null;
+  const fmt = iso => new Date(iso).toLocaleString("zh-TW", { month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit" });
+  return el("div", { class: "card" },
+    el("h2", null, "📝 月考成績"),
+    withExams.map(k => el("div", null,
+      el("h3", null, k.nickname),
+      state.exams[k.id].map(e => el("div", { class: "card" },
+        el("div", { class: "row" }, el("b", null, e.title), el("span", { class: "muted" }, fmt(e.finished_at))),
+        el("p", { class: "big" }, e.score + " 分　", el("span", { class: "muted" }, e.correct + " / " + e.total + " 題答對")),
+        e.units && e.units.length ? el("ul", null, e.units.map(u => el("li", null, "第 " + (u.unit_no ?? "?") + " 單元：" + u.correct + " / " + u.total + " 題"))) : null)))),
+    el("p", { class: "muted" }, "各題的正確答案和詳解，要等月考截止後，由孩子自己在「我的紀錄」查看。"));
+}
+
 function addCard() {
   const f = state.form;
   const nick = el("input", { id: "c-nick", type: "text", maxlength: 20, autocomplete: "off", value: f.nickname, placeholder: "例如：小安",
@@ -156,10 +178,10 @@ function render() {
   if (!state.ready) parts.push(noticeCard());
   else {
     if (state.reveal) parts.push(revealCard());
-    parts.push(kidsCard(), addCard());
+    parts.push(kidsCard(), examsCard(), addCard());
   }
   if (state.msg) parts.push(el("div", { class: "msg " + state.msg.cls, role: "status" }, state.msg.text));
-  app.replaceChildren(...parts);
+  app.replaceChildren(...parts.filter(Boolean));
   const f = focusId && document.getElementById(focusId);
   if (f && !f.disabled) f.focus();
 }
