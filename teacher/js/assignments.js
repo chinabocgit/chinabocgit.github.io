@@ -2,10 +2,10 @@
 // Exams (月考): send a preset paper or auto-pick questions from chosen units, preview and swap questions, set a time limit.
 // All rules (who may assign which subject, scope checks, "no deleting once a child answered") are enforced by the database;
 // this page only collects input and shows the server's message when something is refused.
-import { el } from "../../js/dom.js?v=9d63c7c7";
-import { setSafeHtml } from "../../js/sanitize.js?v=9d63c7c7";
-import { sb, rpc, select, ApiError } from "./tapi.js?v=9d63c7c7";
-import { requireTeacher, signOut } from "./tsession.js?v=9d63c7c7";
+import { el } from "../../js/dom.js?v=4337341a";
+import { setSafeHtml } from "../../js/sanitize.js?v=4337341a";
+import { sb, rpc, select, ApiError } from "./tapi.js?v=4337341a";
+import { requireTeacher, signOut } from "./tsession.js?v=4337341a";
 
 const app = document.getElementById("app");
 const me = await requireTeacher();
@@ -168,7 +168,7 @@ async function toggleExam() {
 // Loads the papers of the chosen subject; picks the first one and previews it.
 async function loadExamPapers() {
   ex.items = []; ex.paperId = ""; ex.units = new Set();
-  const papers = await guard(() => rpc("rpc_list_exam_papers", { p_subject_id: ex.subject }));
+  const papers = await guard(() => rpc("rpc_list_exam_papers", { p_subject_id: ex.subject, p_grade: S.cls.grade, p_semester: S.cls.semester }));
   ex.papers = papers || [];
   ex.limit = defaultMinutes(ex.subject);
   if (ex.mode === "paper" && ex.papers[0]) await choosePaper(ex.papers[0].id);

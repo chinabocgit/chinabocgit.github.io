@@ -3,11 +3,11 @@
 //  - Answers stay on this device while the child works (so a refresh keeps them) and can be changed freely;
 //    they are sent together at the end (rpc_submit_exam). No answers, hints or feedback are shown during the exam.
 //  - Right answers and explanations open after the due date (attempt.html), decided by the server.
-import { el } from "./dom.js?v=9d63c7c7";
-import { rpc, ApiError } from "./api.js?v=9d63c7c7";
-import { requireStudent } from "./session.js?v=9d63c7c7";
-import { renderQuestion, focusQuestion } from "./qview.js?v=9d63c7c7";
-import { clockOffset, remainingSeconds, formatClock, lowTime, buildItems } from "./examtime.js?v=9d63c7c7";
+import { el } from "./dom.js?v=4337341a";
+import { rpc, ApiError } from "./api.js?v=4337341a";
+import { requireStudent } from "./session.js?v=4337341a";
+import { renderQuestion, focusQuestion } from "./qview.js?v=4337341a";
+import { clockOffset, remainingSeconds, formatClock, lowTime, buildItems } from "./examtime.js?v=4337341a";
 
 const asgId = new URLSearchParams(location.search).get("assignment");
 const app = document.getElementById("app");
