@@ -2,10 +2,10 @@
 // Exams (月考): send a preset paper or auto-pick questions from chosen units, preview and swap questions, set a time limit.
 // All rules (who may assign which subject, scope checks, "no deleting once a child answered") are enforced by the database;
 // this page only collects input and shows the server's message when something is refused.
-import { el } from "../../js/dom.js?v=de1fcbf8";
-import { setSafeHtml } from "../../js/sanitize.js?v=de1fcbf8";
-import { sb, rpc, select, ApiError } from "./tapi.js?v=de1fcbf8";
-import { requireTeacher, signOut } from "./tsession.js?v=de1fcbf8";
+import { el } from "../../js/dom.js?v=cbc19fbd";
+import { setSafeHtml } from "../../js/sanitize.js?v=cbc19fbd";
+import { sb, rpc, select, ApiError } from "./tapi.js?v=cbc19fbd";
+import { requireTeacher, signOut } from "./tsession.js?v=cbc19fbd";
 
 const app = document.getElementById("app");
 const me = await requireTeacher();

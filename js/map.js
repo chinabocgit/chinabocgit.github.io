@@ -1,10 +1,10 @@
 // Map home: subject tabs, units as blocks, levels as lamps, rewards summary, open-assignment banner.
-import { el } from "./dom.js?v=de1fcbf8";
-import { ApiError } from "./api.js?v=de1fcbf8";
-import { requireStudent, onTick, logout } from "./session.js?v=de1fcbf8";
-import { loadMapData, buildMap, recommendNext } from "./data.js?v=de1fcbf8";
-import { applyTheme } from "./theme.js?v=de1fcbf8";
-import { renderMap } from "./mapview.js?v=de1fcbf8";
+import { el } from "./dom.js?v=cbc19fbd";
+import { ApiError } from "./api.js?v=cbc19fbd";
+import { requireStudent, onTick, logout } from "./session.js?v=cbc19fbd";
+import { loadMapData, buildMap, recommendNext } from "./data.js?v=cbc19fbd";
+import { applyTheme } from "./theme.js?v=cbc19fbd";
+import { renderMap } from "./mapview.js?v=cbc19fbd";
 
 const app = document.getElementById("app");
 const me = await requireStudent();
@@ -110,11 +110,12 @@ function assignmentBanner() {
     const state_ = isDone ? "✅ 已完成，" + (a.attempt.score ?? "—") + " 分"
       : a.status === "upcoming" ? "⏳ 還沒開始（" + fmt(a.start_at) + "）"
       : a.status === "closed" ? "🔒 已結束，沒有交"
+      : a.attempt && a.kind === "exam" ? "⏱ 月考已開始計時，請繼續作答"
       : a.attempt ? "✏️ 做到一半（" + a.attempt.answered + "/" + a.total + "）" : "🆕 還沒做";
     return el("li", { class: "asg-row" },
-      el("div", { class: "asg-main" }, el("b", null, a.title), el("div", { class: "muted" }, state_ + (a.due_at && !isDone && a.status === "open" ? "・截止 " + fmt(a.due_at) : ""))),
+      el("div", { class: "asg-main" }, el("b", null, (a.kind === "exam" ? "📝 月考｜" : "") + a.title), el("div", { class: "muted" }, state_ + (a.due_at && !isDone && a.status === "open" ? "・截止 " + fmt(a.due_at) : ""))),
       isDone && a.attempt.id ? el("a", { class: "btn ghost", href: "attempt.html?id=" + encodeURIComponent(a.attempt.id) }, "看詳情")
-        : a.status === "open" ? el("a", { class: "btn", href: "play.html?assignment=" + encodeURIComponent(a.id) }, a.attempt ? "繼續" : "開始") : null);
+        : a.status === "open" ? el("a", { class: "btn", href: (a.kind === "exam" ? "exam.html?assignment=" : "play.html?assignment=") + encodeURIComponent(a.id) }, a.attempt ? "繼續" : "開始") : null);
   };
   return el("div", { class: "banner asg-card", role: "status" },
     el("b", null, "📌 老師派的作業"),

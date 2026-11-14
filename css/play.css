@@ -35,3 +35,16 @@ nav.row .btn { text-decoration: none; }
 .report-panel { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-start; }
 .report-panel[hidden] { display: none; }
 .report-panel textarea { flex: 1 1 240px; min-height: 48px; font: inherit; padding: 8px; border: 2px solid var(--line); border-radius: 10px; }
+
+/* exam page */
+.exam-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.exam-clock { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; margin-left: auto; }
+.exam-clock.low { color: #b42318; }
+.qnav { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+.qn { min-width: 40px; padding: 6px 8px; border: 2px solid var(--line); border-radius: 10px; background: var(--card); color: var(--ink); font-size: 16px; text-align: center; }
+.qn.done { background: var(--chip); border-color: var(--brand); }
+.qn.cur { outline: 3px solid var(--brand); }
+.qn.right { background: #e6f6ec; border-color: #18794e; color: #18794e; }
+.qn.wrong { background: #fdeceb; border-color: #b42318; color: #b42318; }
+.exam-nav { justify-content: space-between; }
+.rules { margin: 8px 0 12px 18px; line-height: 1.8; }

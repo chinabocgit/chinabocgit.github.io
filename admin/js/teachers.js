@@ -1,9 +1,9 @@
 // Teacher applications: list pending requests, approve, or reject with a reason.
-import { el } from "../../js/dom.js?v=de1fcbf8";
-import { sb, rpc, select, ApiError } from "../../teacher/js/tapi.js?v=de1fcbf8";
-import { signOut } from "../../teacher/js/tsession.js?v=de1fcbf8";
-import { put, note, gate, navBar } from "./common.js?v=de1fcbf8";
-import { validateReject } from "./adminCheck.js?v=de1fcbf8";
+import { el } from "../../js/dom.js?v=cbc19fbd";
+import { sb, rpc, select, ApiError } from "../../teacher/js/tapi.js?v=cbc19fbd";
+import { signOut } from "../../teacher/js/tsession.js?v=cbc19fbd";
+import { put, note, gate, navBar } from "./common.js?v=cbc19fbd";
+import { validateReject } from "./adminCheck.js?v=cbc19fbd";
 
 document.getElementById("logout").addEventListener("click", signOut);
 let flash = null;

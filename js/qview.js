@@ -1,10 +1,10 @@
 // Renders one question: data card, stem, answer controls (choice / tf / fill / order), 3-level hints, feedback.
 // All database-provided text goes through setSafeHtml; the only plain-text inputs are the child's own typing.
-import { el } from "./dom.js?v=de1fcbf8";
-import { setSafeHtml } from "./sanitize.js?v=de1fcbf8";
-import { renderFigure } from "./figure.js?v=de1fcbf8";
-import { validateSpeak, speak } from "./speak.js?v=de1fcbf8";
-import { sendReport } from "./report.js?v=de1fcbf8";
+import { el } from "./dom.js?v=cbc19fbd";
+import { setSafeHtml } from "./sanitize.js?v=cbc19fbd";
+import { renderFigure } from "./figure.js?v=cbc19fbd";
+import { validateSpeak, speak } from "./speak.js?v=cbc19fbd";
+import { sendReport } from "./report.js?v=cbc19fbd";
 
 // A "listen" button for questions whose payload has speak text. Returns null when there is nothing valid to read.
 function speakRow(payload) {
@@ -45,6 +45,7 @@ function reportRow(q) {
 }
 
 // q: question from the server. opts: { index, total, hints: string[] (may be empty), onSubmit(resp, hintsUsed, seconds) }
+// Exam mode: { noSubmit: true, noReport: true, initial: earlier response, onChange(resp|null) } - answers are collected by the page and handed in together.
 // Returns { root, showFeedback(fb), lock() }.
 export function renderQuestion(q, opts) {
   const started = Date.now();
@@ -59,9 +60,10 @@ export function renderQuestion(q, opts) {
   function setResponse(r) {
     response = r;
     submit.disabled = locked || r === null;
+    if (opts.onChange) opts.onChange(r);
   }
   function send() {
-    if (locked || response === null) return;
+    if (locked || response === null || !opts.onSubmit) return;
     const seconds = Math.min(3600, Math.round((Date.now() - started) / 1000));
     opts.onSubmit(response, hintsUsed, seconds);
   }
@@ -70,7 +72,7 @@ export function renderQuestion(q, opts) {
   if (q.qtype === "choice") {
     const buttons = [];
     for (const opt of q.payload.options || []) {
-      const b = el("button", { class: "opt", "aria-pressed": "false", onclick: () => {
+      const b = el("button", { class: "opt", "aria-pressed": opts.initial === opt ? "true" : "false", onclick: () => {
         if (locked) return;
         buttons.forEach(x => x.setAttribute("aria-pressed", "false"));
         b.setAttribute("aria-pressed", "true");
@@ -80,6 +82,7 @@ export function renderQuestion(q, opts) {
       buttons.push(b);
     }
     controls.append(...buttons);
+    if (typeof opts.initial === "string" && (q.payload.options || []).includes(opts.initial)) response = opts.initial;
   } else if (q.qtype === "tf") {
     const mk = (label, val) => {
       const b = el("button", { class: "opt", "aria-pressed": "false", onclick: () => {
@@ -90,15 +93,19 @@ export function renderQuestion(q, opts) {
       } }, label);
       return b;
     };
-    controls.append(mk("⭕ 對", true), mk("❌ 錯", false));
+    const yes = mk("⭕ 對", true), no = mk("❌ 錯", false);
+    if (opts.initial === true) { yes.setAttribute("aria-pressed", "true"); response = true; }
+    if (opts.initial === false) { no.setAttribute("aria-pressed", "true"); response = false; }
+    controls.append(yes, no);
   } else if (q.qtype === "fill") {
-    const input = el("input", { type: "text", class: "fill", autocomplete: "off", "aria-label": "你的答案",
+    const input = el("input", { type: "text", class: "fill", autocomplete: "off", "aria-label": "你的答案", value: typeof opts.initial === "string" ? opts.initial : "",
       oninput: () => setResponse(input.value.trim() === "" ? null : input.value),
       onkeydown: e => { if (e.key === "Enter") send(); } });
     controls.append(input);
+    if (typeof opts.initial === "string" && opts.initial.trim() !== "") response = opts.initial;
   } else if (q.qtype === "order") {
     const items = q.payload.items || [];
-    const picked = [];                                   // texts in chosen order
+    const picked = Array.isArray(opts.initial) ? opts.initial.filter(t => items.includes(t)) : [];   // texts in chosen order
     const slots = el("div", { class: "order-picked", "aria-label": "你排的順序" });
     const pool = el("div", { class: "order-pool" });
     const redraw = () => {
@@ -140,9 +147,9 @@ export function renderQuestion(q, opts) {
     speakRow(q.payload),
     controls,
     hintBtn ? el("div", { class: "row" }, hintBtn) : null, hintBox,
-    el("div", { class: "row" }, submit),
+    opts.noSubmit ? null : el("div", { class: "row" }, submit),
     feedback,
-    reportRow(q));
+    opts.noReport ? null : reportRow(q));
 
   return {
     root,

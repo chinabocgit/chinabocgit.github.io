@@ -1,5 +1,5 @@
 // Supabase client and RPC wrapper. Expects the supabase-js UMD script to be loaded before any module.
-import { SB_URL, SB_KEY } from "./config.js?v=de1fcbf8";
+import { SB_URL, SB_KEY } from "./config.js?v=cbc19fbd";
 
 // Separate storage key so the child session never mixes with adult sessions on the same origin.
 export const sb = window.supabase.createClient(SB_URL, SB_KEY, {
@@ -11,6 +11,9 @@ const FRIENDLY = {
   session_invalid: "登入已失效，請重新登入。",
   not_found: "找不到這個項目。",
   assignment_closed: "這份作業現在沒有開放。",
+  assignment_not_started: "這份月考還沒開始。",
+  use_exam_flow: "月考請從月考頁面作答。",
+  not_started: "還沒有開始月考，請先按「開始月考」。",
   config_error: "這份作業還沒設定好，請告訴老師。",
   invalid_input: "送出的資料有問題，請再試一次。",
   insufficient_stars: "星星不夠喔，再多練習幾關吧！",
