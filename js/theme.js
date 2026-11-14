@@ -1,6 +1,6 @@
 // Applies the theme the server resolved for this child (parent > class > grade > platform).
 // Only themes with a stylesheet are styled; others keep the neutral base look but still get data-theme for later.
-const STYLED = new Set(["town"]);
+const STYLED = new Set(["town", "forest", "rail"]);
 
 export function applyTheme(theme) {
   const id = theme && theme.theme_id;

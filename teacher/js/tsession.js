@@ -1,5 +1,5 @@
 // Teacher session: email + password sign-in (Supabase Auth). Sessions refresh automatically; sign out is manual.
-import { sb, setSessionInvalidHandler, isAdmin } from "./tapi.js?v=a7adc987";
+import { sb, setSessionInvalidHandler, isAdmin } from "./tapi.js?v=22277907";
 
 export const goLogin = () => location.replace("index.html");
 

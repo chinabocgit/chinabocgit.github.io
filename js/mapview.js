@@ -1,7 +1,7 @@
 // Illustrated learning map (self-drawn SVG, no external images).
 // One scene per subject: units are districts, levels are stops along a winding road, the pet walks next to the current stop.
 // Themes only change palette and decoration; the logic (states, selection, keyboard) is shared.
-import { petSvg } from "./pet.js?v=a7adc987";
+import { petSvg } from "./pet.js?v=22277907";
 
 const NS = "http://www.w3.org/2000/svg";
 const W = 360;
@@ -74,6 +74,35 @@ function decor(kind, x, y, k) {
 function cloud(x, y, scale, delay) {
   return s("g", { class: "cloud", transform: `translate(${x} ${y}) scale(${scale})`, style: `animation-delay:${delay}s` },
     s("ellipse", { cx: 0, cy: 0, rx: 28, ry: 11, fill: "#fff", opacity: ".85" }), s("ellipse", { cx: -14, cy: -8, rx: 15, ry: 10, fill: "#fff", opacity: ".85" }), s("ellipse", { cx: 10, cy: -10, rx: 17, ry: 11, fill: "#fff", opacity: ".85" }));
+}
+
+/* ---------- far backdrop (between the sky and the ground), one per theme ---------- */
+function farTrees(y, fill, count, seed) {
+  return Array.from({ length: count }, (_, i) => {
+    const x = (i + 0.5) * (W / count) + ((hash(seed + i) % 14) - 7), h = 26 + (hash(seed + "h" + i) % 18);
+    return s("path", { d: `M${x} ${y - h} L${x + 11} ${y} L${x - 11} ${y} Z`, fill });
+  });
+}
+function backdrop(kind) {
+  if (kind === "forest") {
+    const stars = Array.from({ length: 26 }, (_, i) => s("circle", { class: i % 3 === 0 ? "sparkle" : null, cx: 8 + (hash("s" + i) % 344), cy: 8 + (hash("t" + i) % 110), r: 0.9 + (i % 3) * 0.5, fill: "#fff", opacity: ".8" }));
+    return [stars,
+      s("circle", { cx: 310, cy: 98, r: 17, fill: "#fff6c9" }), s("circle", { cx: 318, cy: 93, r: 15, fill: "#244c5c" }),
+      farTrees(150, "#1d4a3b", 12, "a"), farTrees(160, "#173b30", 9, "b")];
+  }
+  if (kind === "rail") {
+    const city = Array.from({ length: 11 }, (_, i) => { const w = 18 + (hash("w" + i) % 14), h = 22 + (hash("v" + i) % 40);
+      return s("rect", { x: i * 33 - 4, y: 150 - h, width: w, height: h, fill: "#c3d3df" }); });
+    return [s("circle", { cx: 304, cy: 100, r: 18, fill: "#ffe9a8" }), s("circle", { cx: 304, cy: 100, r: 28, fill: "#ffe9a8", opacity: ".35" }),
+      s("path", { d: "M0 150 L60 96 L110 134 L170 84 L240 140 L300 100 L360 140 V170 H0 Z", fill: "#b9d3e8" }),
+      s("path", { d: "M0 160 L50 128 L120 156 L200 120 L270 154 L360 126 V176 H0 Z", fill: "#a3c0d9" }), city];
+  }
+  return [s("circle", { cx: 52, cy: 100, r: 17, fill: "#fff1b8" }), s("circle", { cx: 52, cy: 100, r: 27, fill: "#fff1b8", opacity: ".35" }),
+    s("path", { d: "M0 156 Q70 112 140 150 T290 140 T360 152 V176 H0 Z", fill: "#d7ebc2" })];
+}
+function pole(x, y) {
+  return s("g", { transform: `translate(${x} ${y})` }, s("rect", { x: -2, y: -44, width: 4, height: 56, fill: "#6b5a45" }),
+    s("rect", { x: -13, y: -40, width: 26, height: 3, fill: "#6b5a45" }), s("rect", { x: -9, y: -31, width: 18, height: 3, fill: "#6b5a45" }));
 }
 
 /* ---------- a stop on the road ---------- */
@@ -149,7 +178,8 @@ export function renderMap({ units, theme, pet, selectedId, onSelect, collectible
     if (!levels.length) y += 40;
   }
   const H = y + 40;
-  for (let cy = cloudY; cy < H - 100; cy += 300) layers.back.push(cloud(60 + (cy % 220), cy, 1 + (cy % 3) * 0.15, (cy % 7) * -1.3));
+  if (P.decor === "rail") for (let py = 230; py < H - 40; py += 260) layers.decor.push(pole(16, py), pole(344, py + 130));
+  if (P.decor !== "forest")   for (let cy = cloudY; cy < H - 100; cy += 300) layers.back.push(cloud(60 + (cy % 220), cy, 1 + (cy % 3) * 0.15, (cy % 7) * -1.3));
 
   // sky, rolling ground, road
   const defs = s("defs", null, s("linearGradient", { id: "sky-" + theme, x1: 0, y1: 0, x2: 0, y2: 1 },
@@ -168,7 +198,7 @@ export function renderMap({ units, theme, pet, selectedId, onSelect, collectible
   const flies = P.decor === "forest" ? Array.from({ length: Math.floor(H / 90) }, (_, i) => s("circle", { class: "firefly", cx: 20 + (hash("f" + i) % 320), cy: 120 + ((hash("g" + i) % Math.max(H - 200, 100))), r: 2.6, fill: P.glow, style: `animation-delay:${(i % 6) * -0.9}s` })) : [];
 
   const svg = s("svg", { viewBox: `0 0 ${W} ${H}`, width: "100%", class: "scene", role: "group", "aria-label": "學習地圖：沿著小路一關一關往前走", "data-theme": theme, preserveAspectRatio: "xMidYMin meet" },
-    defs, s("rect", { width: W, height: H, fill: `url(#sky-${theme})` }), layers.back, ground, flies, layers.road, layers.decor);
+    defs, s("rect", { width: W, height: H, fill: `url(#sky-${theme})` }), backdrop(P.decor), layers.back, ground, flies, layers.road, layers.decor);
   for (const { l, pos } of stops) svg.append(stop(P, l, pos, selectedId === l.id, onSelect, collectibleName));
   // the pet walks next to the current stop
   const cur = stops.find(x => x.l.current);

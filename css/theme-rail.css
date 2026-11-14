@@ -1,0 +1,14 @@
+/* Theme "rail" (星火號鐵道): a bright daytime railway. Stations = levels; clearing a level lights its station. */
+:root[data-theme="rail"] {
+  --bg: #eaf2f8; --card: #ffffff; --ink: #24384f; --mute: #5b7490; --line: #c9d9e8;
+  --brand: #2a6fbf; --brand-ink: #ffffff; --accent: #e8605a; --chip: #e1edf8;
+}
+:root[data-theme="rail"] .unit { background: linear-gradient(#ffffff, #eef5fb); }
+:root[data-theme="rail"] .path::before {
+  content: ""; position: absolute; left: 8px; right: 8px; top: 44px; height: 10px; z-index: 0;
+  background: repeating-linear-gradient(90deg, #8b99a3 0 10px, transparent 10px 16px); border-top: 3px solid #6d5a45; border-bottom: 3px solid #6d5a45;
+}
+:root[data-theme="rail"] .lamp { position: relative; z-index: 1; }
+:root[data-theme="rail"] .lamp[data-state="cleared"] .dot,
+:root[data-theme="rail"] .lamp[data-state="gold"] .dot { box-shadow: 0 0 0 6px #ffe08a55, 0 0 14px 4px #ffe08a; }
+:root[data-theme="rail"] .scene-wrap { border-color: #c9d9e8; }

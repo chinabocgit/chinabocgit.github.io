@@ -85,6 +85,39 @@ function body(root, petId, type) {
       svg("path", { d: "M54 84 q6 5 12 0", stroke: "#2b2b2b", "stroke-width": 2.5, fill: "none", "stroke-linecap": "round" }));
     return;
   }
+  if (petId === "glow") {   // 螢火寶寶：圓滾滾的小蟲，頭上兩根觸角，屁股一盞會發光的小燈（森林主題）
+    root.append(
+      svg("circle", { cx: 90, cy: 92, r: 20, fill: "#e8ff7a", "fill-opacity": 0.28 }),
+      svg("ellipse", { cx: 46, cy: 106, rx: 9, ry: 5, fill: "#3f9f78" }), svg("ellipse", { cx: 70, cy: 106, rx: 9, ry: 5, fill: "#3f9f78" }),
+      svg("path", { d: "M46 38 C40 24 34 20 30 22", stroke: "#3f9f78", "stroke-width": 3.5, fill: "none", "stroke-linecap": "round" }),
+      svg("path", { d: "M74 38 C80 24 86 20 90 22", stroke: "#3f9f78", "stroke-width": 3.5, fill: "none", "stroke-linecap": "round" }),
+      svg("circle", { cx: 29, cy: 22, r: 4.5, fill: "#e8ff7a" }), svg("circle", { cx: 91, cy: 22, r: 4.5, fill: "#e8ff7a" }),
+      svg("ellipse", { cx: 60, cy: 70, rx: 34, ry: 32, fill: "#7fd6a0" }),
+      svg("ellipse", { cx: 60, cy: 80, rx: 24, ry: 20, fill: "#b7efc9", "fill-opacity": 0.6 }),
+      svg("circle", { cx: 90, cy: 92, r: 11, fill: "#f4ff9a", stroke: "#cfe84a", "stroke-width": 2 }),
+      svg("circle", { cx: 87, cy: 89, r: 3.2, fill: "#fff" }),
+      svg("circle", { cx: 41, cy: 78, r: 4.5, fill: "#ff9a9a", "fill-opacity": 0.5 }), svg("circle", { cx: 79, cy: 78, r: 4.5, fill: "#ff9a9a", "fill-opacity": 0.5 }),
+      svg("circle", { cx: 48, cy: 66, r: 6.5, fill: "#26433a" }), svg("circle", { cx: 72, cy: 66, r: 6.5, fill: "#26433a" }),
+      svg("circle", { cx: 50, cy: 64, r: 2.2, fill: "#fff" }), svg("circle", { cx: 74, cy: 64, r: 2.2, fill: "#fff" }),
+      svg("path", { d: "M54 80 q6 5 12 0", stroke: "#26433a", "stroke-width": 2.5, fill: "none", "stroke-linecap": "round" }));
+    return;
+  }
+  if (petId === "rail") {   // 小星火號：圓圓的小火車頭，煙囪冒著煙，車頭燈亮亮（鐵道主題）
+    root.append(
+      svg("circle", { cx: 80, cy: 22, r: 7, fill: "#fff", "fill-opacity": 0.85 }), svg("circle", { cx: 90, cy: 12, r: 5, fill: "#fff", "fill-opacity": 0.7 }),
+      svg("rect", { x: 70, y: 28, width: 12, height: 20, rx: 3, fill: "#3f5f8f" }),
+      svg("rect", { x: 66, y: 24, width: 20, height: 7, rx: 3, fill: "#2a4d7a" }),
+      svg("rect", { x: 26, y: 44, width: 68, height: 50, rx: 14, fill: "#7aa7e8" }),
+      svg("rect", { x: 26, y: 78, width: 68, height: 10, fill: "#4f7fc4" }),
+      svg("rect", { x: 20, y: 70, width: 12, height: 14, rx: 4, fill: "#ffe08a", stroke: "#e0a800", "stroke-width": 1.5 }),
+      svg("circle", { cx: 60, cy: 62, r: 18, fill: "#fff", stroke: "#2a4d7a", "stroke-width": 3 }),
+      svg("circle", { cx: 53, cy: 59, r: 4.5, fill: "#26364a" }), svg("circle", { cx: 67, cy: 59, r: 4.5, fill: "#26364a" }),
+      svg("circle", { cx: 54.5, cy: 57.5, r: 1.6, fill: "#fff" }), svg("circle", { cx: 68.5, cy: 57.5, r: 1.6, fill: "#fff" }),
+      svg("path", { d: "M54 68 q6 5 12 0", stroke: "#26364a", "stroke-width": 2.5, fill: "none", "stroke-linecap": "round" }),
+      svg("circle", { cx: 40, cy: 98, r: 8, fill: "#2a4d7a" }), svg("circle", { cx: 60, cy: 98, r: 8, fill: "#2a4d7a" }), svg("circle", { cx: 80, cy: 98, r: 8, fill: "#2a4d7a" }),
+      svg("circle", { cx: 40, cy: 98, r: 3, fill: "#c9d9ee" }), svg("circle", { cx: 60, cy: 98, r: 3, fill: "#c9d9ee" }), svg("circle", { cx: 80, cy: 98, r: 3, fill: "#c9d9ee" }));
+    return;
+  }
   switch (type) {
     case "animal":   // round body with two ears and a tail
       root.append(
