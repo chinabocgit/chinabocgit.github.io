@@ -1,8 +1,8 @@
 // Theme settings: choose the default theme per grade, and enable or disable themes. Admin only (the database enforces it).
-import { el } from "../../js/dom.js?v=22277907";
-import { rpc, ApiError } from "../../teacher/js/tapi.js?v=22277907";
-import { signOut } from "../../teacher/js/tsession.js?v=22277907";
-import { put, note, gate, navBar } from "./common.js?v=22277907";
+import { el } from "../../js/dom.js?v=50bfb336";
+import { rpc, ApiError } from "../../teacher/js/tapi.js?v=50bfb336";
+import { signOut } from "../../teacher/js/tsession.js?v=50bfb336";
+import { put, note, gate, navBar } from "./common.js?v=50bfb336";
 
 document.getElementById("logout").addEventListener("click", signOut);
 let flash = null;

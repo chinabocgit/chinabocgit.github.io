@@ -1,6 +1,6 @@
-import { el } from "./dom.js?v=22277907";
-import { PICS, PIC_LEN } from "./config.js?v=22277907";
-import { login, deviceId, takeLoginMessage, hasSavedSession } from "./session.js?v=22277907";
+import { el } from "./dom.js?v=50bfb336";
+import { PICS, PIC_LEN } from "./config.js?v=50bfb336";
+import { login, deviceId, takeLoginMessage, hasSavedSession } from "./session.js?v=50bfb336";
 
 const app = document.getElementById("app");
 const pad2 = n => String(n).padStart(2, "0");

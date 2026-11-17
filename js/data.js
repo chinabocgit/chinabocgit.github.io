@@ -1,5 +1,5 @@
 // Loads everything the map page needs in one go (curriculum is public read; rewards, theme and assignments are RPCs).
-import { sb, rpc, ApiError } from "./api.js?v=22277907";
+import { sb, rpc, ApiError } from "./api.js?v=50bfb336";
 
 export async function select(query) {
   const { data, error } = await query;
@@ -27,7 +27,14 @@ export async function loadMapData(me) {
   const levels = unitIds.length
     ? await select(sb.from("levels").select("id,unit_id,seq,name,kind,question_count,is_open").in("unit_id", unitIds).eq("is_open", true).order("seq"))
     : [];
-  return { rewards, theme, asg, subjects, books, units, levels, chests, pets };
+  // A book with no open level at all is retired (e.g. the older edition hidden on purpose): hide the whole book,
+  // otherwise its units would show up as empty "still being prepared" blocks next to the current edition.
+  const activeBookIds = new Set(units.filter(u => levels.some(l => l.unit_id === u.id)).map(u => u.book_id));
+  return {
+    rewards, theme, asg, subjects, chests, pets, levels,
+    books: books.filter(b => activeBookIds.has(b.id)),
+    units: units.filter(u => activeBookIds.has(u.book_id)),
+  };
 }
 
 // Merge curriculum, rewards and assignments into: [{subject, units:[{unit, levels:[{...level, state, stars, lockedBy}]}]}]

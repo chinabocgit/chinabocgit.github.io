@@ -1,9 +1,9 @@
 // One child: assignment progress (with links to question-by-question detail), rewards summary, and the wrong-answer notebook.
-import { el } from "../../js/dom.js?v=22277907";
-import { setSafeHtml } from "../../js/sanitize.js?v=22277907";
-import { describeAnswer, describeResponse } from "../../js/grade.js?v=22277907";
-import { rpc, ApiError } from "./tapi.js?v=22277907";
-import { requireTeacher, signOut } from "./tsession.js?v=22277907";
+import { el } from "../../js/dom.js?v=50bfb336";
+import { setSafeHtml } from "../../js/sanitize.js?v=50bfb336";
+import { describeAnswer, describeResponse } from "../../js/grade.js?v=50bfb336";
+import { rpc, ApiError } from "./tapi.js?v=50bfb336";
+import { requireTeacher, signOut } from "./tsession.js?v=50bfb336";
 
 const app = document.getElementById("app");
 const me = await requireTeacher();

@@ -1,8 +1,8 @@
 // Class overview: roster with progress summary, unlock a child, reset a picture password (shown once), sign the whole class out.
-import { el } from "../../js/dom.js?v=22277907";
-import { PICS } from "../../js/config.js?v=22277907";
-import { sb, rpc, select, ApiError } from "./tapi.js?v=22277907";
-import { requireTeacher, signOut } from "./tsession.js?v=22277907";
+import { el } from "../../js/dom.js?v=50bfb336";
+import { PICS } from "../../js/config.js?v=50bfb336";
+import { sb, rpc, select, ApiError } from "./tapi.js?v=50bfb336";
+import { requireTeacher, signOut } from "./tsession.js?v=50bfb336";
 
 const app = document.getElementById("app");
 const me = await requireTeacher();
